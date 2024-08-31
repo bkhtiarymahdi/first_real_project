@@ -1,0 +1,183 @@
+{% load static %}
+{% load base_tags %}
+<!DOCTYPE html>
+<html lang="fa">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Modern Business - Start Bootstrap Template</title>
+        <!-- Favicon--> 
+        <link rel="icon" type="image/x-icon" href="" />
+        <!-- Bootstrap icons-->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" integrity="sha384-dpuaG1suU0eT09tx5plTaGMLBsfDLzUCCUXOY2j/LSvXYuG6Bqs43ALlhIqAJVRb" crossorigin="anonymous">
+        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" /> -->
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{% static 'blog/css/styles.css' %}" rel="stylesheet" />
+        <link href="{% static 'E_commerce/css/view_cart.css' %}" rel="stylesheet" />
+        <link href="{% static 'blog/css/multimedia.css' %}" rel="stylesheet" />
+        <link href="{% static 'blog/css/movie_voice.css' %}" rel="stylesheet" />
+        <link href="{% static 'blog/css/fa_styles.css' %}" rel="stylesheet" />
+        <link href="{% static 'blog/css/nav.css' %}" rel="stylesheet" />
+        <link href="{% static 'blog/css/alphabet.css' %}" rel="stylesheet" />
+        <link href="{% static 'blog/css/footer.css' %}" rel="stylesheet" />
+        <link href="{% static 'blog/css/details.css' %}" rel="stylesheet" />
+        <link href="{% static 'blog/css/slider_styles.css' %}" rel="stylesheet" />
+        <link href="{% static 'blog/css/between_nav_body.css' %}" rel="stylesheet" />
+        <!-- slider box -->
+        <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">  
+        
+    </head>
+    <body class="container p-4 my-5 rounded">
+      <h6 style="color: white;">{{user.username}}</h6>
+        <a class="navbar-brand" href="{% url 'blog:home' %}"><img src="{% static 'blog/images/0333.png' %}" class="img-heder" style="margin-bottom: 10px;" alt=""></a>
+        <div>
+            <main>
+                <!-- Navigation-->
+
+                {% category_nav %}
+    
+                <!-- page search -->
+                {% block search %}
+                {% endblock %}
+                <!-- list all book -->
+                {% block content %}
+                {% endblock %}
+                <!-- page home -->
+                {% block main %}
+                {% endblock %}
+    
+    
+                <!-- Testimonial section-->
+                <div class="py-5 bg-light" id="link_eitaa">
+                    <div class="container px-5 my-5">
+                        <div class="row gx-5 justify-content-center">
+                            <div class="col-lg-10 col-xl-7">
+                                <div class="text-center">
+                                    <div class="fs-4 mb-4 special-titles">اگر علاقه‌مند هستید تا آخرین اخبار سایت ما را بروز دریافت کنید به کانال ما بپیوندید</div>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <a href="https://eitaa.com/tasnimnews"><img class="rounded-circle me-3" src="{% static 'blog/images/Eitaa-vector-logo.png' %}" height="60px" width="60px" alt="..." /></a> 
+                                        <a href="https://eitaa.com/tasnimnews"><img class="rounded-circle me-3" src="{% static 'blog/images/telegram.png' %}" height="60px" width="60px" alt="..." /></a> 
+                                        <a href="https://eitaa.com/tasnimnews"><img class="rounded-circle me-3" src="{% static 'blog/images/x.png' %}" height="60px" width="60px" alt="..." /></a> 
+                                        <a href="https://eitaa.com/tasnimnews"><img class="rounded-circle me-3" src="{% static 'blog/images/instagram.webp' %}" height="60px" width="60px" alt="..." /></a> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            
+        </div>
+
+        <!-- Footer-->
+        <footer class="custom-footer">
+            <div class="custom-container" style="border-radius: 7px;">
+              <div class="custom-row">
+                <div class="custom-column">
+                  <h5>دیدگاه‌ها</h5>
+                  <ul>
+                    <li>ولایت و مهدویت</li>
+                    <li>تعلیم و تربیت</li>
+                    <li>اخلاق و معنویت</li>
+                    <li>فرهنگی</li>
+                    <li>سیاسی</li>
+                    <li>تحلیل تاریخ</li>
+                    <li>هنر و رسانه</li>
+                  </ul>
+                </div>
+                <div class="custom-column">
+                  <h5>بیان‌ها</h5>
+                  <ul>
+                    <li>گفتگو</li>
+                    <li>سخنرانی</li>
+                    <li>راهکار</li>
+                    <li>راهبرد</li>
+                    <li>آینده‌نگری</li>
+                  </ul>
+                </div>
+                <div class="custom-column">
+                  <h5>قطعه‌ها</h5>
+                  <ul>
+                    <li>اشعار</li>
+                    <li>عبارات کوتاه</li>
+                    <li>مناجات</li>
+                    <li>مثال ها</li>
+                    <li>روزه ها</li>
+                    <li>خاطرات</li>
+                  </ul>
+                </div>
+                <div class="custom-column">
+                  <h5>یادداشت‌های استاد</h5>
+                  <ul>
+                    <li>کتابخانه</li>
+                    <li>تبلیغات</li>
+                    <li>مقالات</li>
+                    <li>سیر مطالعاتی</li>
+                    <li>معرفی کتاب</li>
+                    <li>مستندات</li>
+                  </ul>
+                </div>
+                <div class="custom-column">
+                  <h5>چندرسانه‌ای</h5>
+                  <ul>
+                    <li>فهرست‌ها</li>
+                    <li>موضوعی</li>
+                    <li>صوتی</li>
+                    <li>تصویری</li>
+                    <li>کلیپ صوتی</li>
+                    <li>کلیپ تصویری</li>
+                    <li>محصولات</li>
+                  </ul>
+                </div>
+                <div class="custom-column">
+                  <h5>نوبت شما</h5>
+                  <ul>
+                    <li>پرسش و پاسخ</li>
+                    <li>بیاید از تجربه شما بگویید</li>
+                    <li>نظرات شما</li>
+                    <li>سخنان ناظر گذار</li>
+                    <li>همکاری با ما</li>
+                    <li>بپرسید... پاسخ دهید...</li>
+                  </ul>
+                </div>
+              </div><hr>
+              <h6>استفاده از مطالب این پایگاه با ذکر منبع بلامانع است.</h5>
+          </footer>
+          
+        
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="{% static 'blog/js/scripts.js' %}"></script>
+        <!-- slider box -->
+        <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+        <script>
+            var swiper = new Swiper('.swiper-container', {
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                },
+                loop: true,
+                slidesPerView: 3,
+                spaceBetween: 10,
+                centeredSlides: false,
+            });
+        </script>
+        <script>
+            setTimeout(function() {
+                document.getElementById('payment-message').style.display = 'none';
+            }, 7000); // مخفی کردن پیام پس از 7 ثانیه
+        </script>
+        
+    </body>
+</html>

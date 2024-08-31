@@ -1,0 +1,51 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.fix_clip{
+    margin: 30px 110px 30px 110px;
+    padding: 5px;
+    border: 3px solid white;
+    border-radius: 20px;
+    color: white;
+}
+
+.custom_imgs{
+    margin: auto 40px auto 20px;
+    width: 50px;
+    height: 50px;
+}
+
+.time_create{
+    margin: auto 20px auto 0px;
+}
+
+.tag_description{
+        /* top right botn left */
+    margin: auto 5px auto auto ;
+}
+.tag_title{
+    margin: auto 20px auto 5px;
+}
+
+
+.boxes{
+    margin: 30px 110px 30px 110px;
+    padding: 5px;
+    border-bottom: 3px solid white;
+    color: white;
+}
+
+.tag_description_ww{
+    /* top right botn left */
+margin: auto 5px auto 0px ;
+}
+
+.time_create_ww{
+    margin: auto 0px auto 0px;
+    display: flex;
+    justify-content: flex-start;
+    margin-right: auto !important;
+}

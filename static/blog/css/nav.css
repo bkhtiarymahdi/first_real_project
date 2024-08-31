@@ -1,0 +1,72 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.set_nav {
+  margin: 5px 40px 5px 40px;
+}
+
+/* .......................................................................................... */
+
+.navbar-nav {
+  display: flex;
+  justify-content: space-around;
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-link {
+  display: block;
+  color: #fff;
+  padding: 1em 2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.nav-item:hover .nav-link {
+  background-color: #3498db;
+}
+
+/* Dropdown styling */
+.submenu {
+  border-radius: 7px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%; /* این باعث می‌شود که عرض زیرمجموعه‌ها به اندازه لینک والد باشد */
+  background-color: #1f5274;
+  display: none;
+  z-index: 1000;
+  padding: 0; /* حذف پدینگ */
+  list-style-type: none; /* حذف نقطه‌های لیست */
+}
+
+.submenu li {
+  width: 100%;
+}
+
+.submenu a {
+  padding: 1em;
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.submenu a:hover {
+  background-color: #2980b9;
+}
+
+.nav-item:hover .submenu {
+  display: block;
+}
+
+.form-control {
+  width: 150px;
+  margin-left: -90px;
+}

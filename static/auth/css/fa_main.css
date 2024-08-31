@@ -1,0 +1,10 @@
+body{
+    direction: rtl;
+    text-align: right;
+    background-color: #032840;
+}
+
+.navbar-nav {
+    margin-left: initial !important;
+    margin-right: auto;
+}

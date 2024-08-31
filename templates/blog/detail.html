@@ -1,0 +1,64 @@
+{% extends "blog/base.html" %}
+<!-- {% load static %} -->
+{% block content %}
+    <section>
+        {% if model_type == 'article' %}
+        <div class="row d-flex body_details">
+                <img class="custome_imageing" src="{{object.img.url}}" alt="">
+            <div class="data_box col-lg-4">
+                <h3 style="text-align: center; margin-top: 10px;">جعبه ابزار</h3><hr>
+                <h6 class="tools_box">فایل پی دی اف :<a style="text-decoration: none;" href="{{object.pdf.url}}">دریافت فایل</a></h6>
+                <h6 class="tools_box">فایل وورد :<a style="text-decoration: none;" href="{{object.word.url}}">دریافت فایل</a></h6>
+                <h6 class="tools_box">تاریخ انتشار : {{object.publish}}</h6>
+                <h6 class="tools_box">برچسب ها :<a style="text-decoration: none;" href="">{% for tag in object.tag.all %}, {{tag.name}}{% endfor %}</a></h6>
+            </div>
+        </div>
+        <div class="box_paragraph">
+            <h2 class="title">{{object.title}}</h2>
+            <p class="paragraph">{{object.description}}</p>
+        </div>
+        {% elif model_type == 'book' %}
+        <div class="row d-flex body_details">
+                <img class="custome_imageing" src="{{object.img.url}}" alt="">
+            <div class="data_box col-lg-4">
+                <h3 style="text-align: center; margin-top: 10px;">جعبه ابزار</h3><hr>
+                <h6 class="tools_box">فایل پی دی اف :<a style="text-decoration: none;" href="{{object.pdf.url}}">دریافت فایل</a></h6>
+                <h6 class="tools_box">فایل وورد :<a style="text-decoration: none;" href="{{object.word.url}}">دریافت فایل</a></h6>
+                <h6 class="tools_box">تاریخ انتشار : {{object.publish}}</h6>
+                <h6 class="tools_box">برچسب ها :<a style="text-decoration: none;" href="">{% for tag in object.tag.all %}, {{tag.name}}{% endfor %}</a></h6>
+            </div>
+        </div>
+        <div class="box_paragraph">
+            <h2 class="title">{{object.title}}</h2>
+            <p class="paragraph">{{object.description}}</p>
+        </div>
+        {% elif model_type == 'biography' %}
+        <div class="row d-flex body_details">
+                <img class="custome_imageing" src="{{object.img.url}}" alt="">
+            <div class="data_box col-lg-4">
+                <h3 style="text-align: center; margin-top: 10px;">جعبه ابزار</h3><hr>
+                <h6 class="tools_box">فایل پی دی اف :<a style="text-decoration: none;" href="{{object.pdf.url}}">دریافت فایل</a></h6>
+                <h6 class="tools_box">فایل وورد :<a style="text-decoration: none;" href="{{object.word.url}}">دریافت فایل</a></h6>
+                <h6 class="tools_box">تاریخ انتشار : {{object.publish}}</h6>
+                <h6 class="tools_box">برچسب ها :<a style="text-decoration: none;" href="">{% for tag in object.tag.all %}, {{tag.name}}{% endfor %}</a></h6>
+            </div>
+        </div>
+        <div class="box_paragraph">
+            <h2 class="title">{{object.title}}</h2>
+            <p class="paragraph">{{object.description}}</p>
+        </div>
+        {% endif %}
+
+    </section>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+

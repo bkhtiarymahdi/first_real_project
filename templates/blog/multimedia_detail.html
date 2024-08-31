@@ -1,0 +1,102 @@
+{% extends "blog/base.html" %}
+<!-- {% load static %} -->
+{% block content %}
+    <section>
+        {% if type == 'voice' %}
+        <audio controls class="mx-auto d-block mb-4" style="width: 700px; margin-top: 60px;">
+            <source src="{{ object.voice.url }}" type="audio/ogg">
+        </audio>
+    
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <a href="{{object.pdf.url}}" class="btn btn-primary">دانلود فایل PDF</a>
+            </div>
+            <div class="col-auto">
+                <a href="{{object.word.url}}" class="btn btn-primary">دانلود فایل Word</a>
+            </div>
+            <div class="col-auto">
+                <span class="btn btn-secondary">تاریخ انتشار: {{object.publish}}</span>
+            </div>
+            <div class="col-auto">
+                <span class="btn btn-secondary">
+                    برچسب‌ها:
+                    {% for tag in object.tag.all %}
+                        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </span>
+            </div>
+        </div>
+        </div>
+        <div class="box_paragraph">
+            <h2 class="title">{{object.title}}</h2><hr>
+            <p class="paragraph">{{object.description}}</p>
+        </div>
+        {% elif type == 'shortsound' %}
+        <audio controls class="mx-auto d-block mb-4" style="width: 700px; margin-top: 60px;">
+            <source src="{{ object.voice.url }}" type="audio/ogg">
+        </audio>
+    
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <a href="{{object.pdf.url}}" class="btn btn-primary">دانلود فایل PDF</a>
+            </div>
+            <div class="col-auto">
+                <a href="{{object.word.url}}" class="btn btn-primary">دانلود فایل Word</a>
+            </div>
+            <div class="col-auto">
+                <span class="btn btn-secondary">تاریخ انتشار: {{object.publish}}</span>
+            </div>
+            <div class="col-auto">
+                <span class="btn btn-secondary">
+                    برچسب‌ها:
+                    {% for tag in object.tag.all %}
+                        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </span>
+            </div>
+        </div>
+        </div>
+        <div class="box_paragraph">
+            <h2 class="title">{{object.title}}</h2><hr>
+            <p class="paragraph">{{object.description}}</p>
+        </div>
+        {% elif type == 'movie' %}
+        <video controls class="mx-auto d-block mb-4">
+            <source src="{{ object.film.url }}" type="audio/ogg">
+        </video>
+    
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <span class="btn btn-secondary">تاریخ انتشار: {{object.publish}}</span>
+            </div>
+            <div class="col-auto">
+                <span class="btn btn-secondary">
+                    برچسب‌ها:
+                    {% for tag in object.tag.all %}
+                        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </span>
+            </div>
+        </div>
+        </div>
+        <div class="box_paragraph">
+            <h2 class="title">{{object.title}}</h2><hr>
+            <p class="paragraph">{{object.description}}</p>
+        </div>
+        {% endif %}
+
+    </section>
+{% endblock %} 
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,18 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.box_alphabet{
+    text-decoration: none;
+    text-align: center;
+    font-size: 2em;
+    color: white;
+    display: inline-block;
+    padding: 10px;
+    margin: 10px;
+    border: 2px solid rgb(105, 188, 84);
+    width: 80px;
+    height: 80px;
+}

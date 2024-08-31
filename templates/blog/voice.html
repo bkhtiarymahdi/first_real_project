@@ -1,0 +1,44 @@
+{% extends "blog/base.html" %}
+<!-- {% load static %} -->
+{% block content %} 
+            
+            <!-- Blog preview section-->
+            <section class="py-5">
+                <div class="container px-5 my-5">
+                    <div class="row gx-5 justify-content-center">
+                        <div class="col-lg-8 col-xl-6">
+                            <div class="text-center">
+                                <h2 class="fw-bolder" id="header_note">سخنرانی</h2>
+                            </div>
+                        </div>
+                    </div><hr style="color: white;">
+                    <!-- div container -->
+                    {% for audio in voices %}
+                     <div class="row fix_clip">
+                        <a href="{% url 'blog:detail_multimedia' type='voice' pk=audio.pk %}" style="color: white; text-decoration: none !important;">
+                        <div class="d-flex box_movie">
+                            <h4 class="tag_title">{{ audio.title }}<b>:</b></h4>
+                                <p class="tag_description">{{ audio.description|truncatewords:15|safe }}...</p>
+                                <audio controls>
+                                    <source src="{{ audio.voice.url }}" type="audio/ogg">
+                                    <!-- <source src="{{ audio.voice.url }}" type="audio/mpeg"> -->
+                                </audio>
+                            </div>
+                        </a>
+                    </div>
+                    </a>
+                     {% endfor %}
+                    <hr style="color: white;">
+                    <div class="pagination">
+                        <ul class="pagination">
+                            {% for page in page_obj.paginator.page_range %}
+                            <li class="page-item {% if page == page_obj.number %}active{% endif %}">
+                                <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+{% endblock %}

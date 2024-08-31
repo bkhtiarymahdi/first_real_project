@@ -1,0 +1,57 @@
+{% extends "blog/base.html" %}
+<!-- {% load static %} -->
+{% block content %} 
+            
+            <!-- Blog preview section-->
+            <section class="py-5">
+                <div class="container px-5 my-5">
+                    <div class="row gx-5 justify-content-center">
+                        <div class="col-lg-8 col-xl-6">
+                            <div class="text-center">
+                                <h2 class="fw-bolder" id="header_note">زندگی نامه</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row gx-5">
+                            {% for biography in biographys %}
+                                <div class="col-lg-4 mb-5">
+                                    <div class="card h-100 shadow border-0">
+                                        <img class="card-img-top img-fluid custom-img" src="{{ biography.img.url }}" alt="..." />
+                                        <div class="card-body p-4">
+                                            {% comment %} <a class="text-decoration-none link-dark stretched-link" href="{% url 'blog:content_detail' model_type='biography' pk=biography.pk %}"> {% endcomment %}
+                                                <h5 class="card-title mb-3">{{ biography.title }}</h5>
+                                            </a>
+                                            <p class="card-text mb-0">{{ biography.description|truncatewords:30|safe }}</p>
+                                        </div><hr>
+                                        <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
+                                            <div class="d-flex align-items-end justify-content-between">
+                                                <div class="d-flex align-items-center">
+                                                    <!-- <div class="text-muted">{{ book.publish }} &middot; 6 min read</div> -->
+                                                    <div class="small">
+                                                        <div class="text-muted">تاریخ انتشار : {{ biography.publish }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if forloop.counter|divisibleby:3 and not forloop.last %}
+                                    </div><div class="row gx-5">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="pagination">
+                            <ul class="pagination">
+                                {% for page in page_obj.paginator.page_range %}
+                                <li class="page-item {% if page == page_obj.number %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+{% endblock %}

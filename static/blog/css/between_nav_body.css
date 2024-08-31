@@ -1,0 +1,16 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+ }
+
+ .title-header{
+    text-align: justify;
+    font-size: 1.2em;
+    color: white;
+ }
+
+.image-heder{
+    width: 400px;
+    height: 350px;
+}

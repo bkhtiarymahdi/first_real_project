@@ -1,0 +1,154 @@
+{% extends "blog/base.html" %}
+{% load static %}
+{% block main %}
+{% if messages %}
+    <div id="payment-message" class="alert alert-info">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% for title in header_title %}
+<header class="header-custom py-2">
+    <div class="container px-5">
+        <div class="row gx-5 align-items-center justify-content-center">
+            <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center"><img class="img-fluid rounded-3 my-5 image-heder" src="{{ title.img.url }}" alt="..." /></div>
+            <div class="col-lg-8 col-xl-7 col-xxl-6">
+                <div class="title-header">
+                    <h1 style="text-align: center;">{{ title.header_title }}</h1><hr>
+                    <p>{{ title.descriptions }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+{% endfor %}
+
+
+<!-- section slidshow --><!-- section slidshow --><!-- section slidshow --><!-- section slidshow -->
+<body class="d-flex flex-column h-100">
+    <main class="flex-shrink-0">
+
+
+    <div class="row">
+        <div class="col-3 last_not">
+            <div>
+                <h2 class="secondary-title">آخرین یاداشت‌ها</h2>
+                {% for note in last_note_article %}
+                <div class="latest-note">
+                    <a href="{% url 'blog:content_detail' model_type='article' pk=note.pk %}">
+                        <h5>{{ note.title }}</h5>
+                        <p>{{ note.description|truncatewords:10|safe }}</p>
+                    </a>
+                </div>
+                {% endfor %}
+                {% for object in last_note_book %}
+                <div class="latest-note">
+                    <a href="{% url 'blog:content_detail' model_type='book' pk=object.pk %}">
+                        <h5>{{ object.title }}</h5>
+                        <p>{{ object.description|truncatewords:10|safe }}</p>
+                    </a>
+                </div>
+                {% endfor %} 
+            </div>
+        </div>
+
+        <div class="col-8 slider_box fixed-box">
+            <div >
+                <h2 class="fw-bolder mb-0 special-title" style="margin-right: 50%;">ویژه ها</h2>
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        {% for article in special_article %}
+                        <div class="swiper-slide">
+                            <a href="{% url 'blog:content_detail' model_type='article' pk=article.pk %}">
+                                <img src="{{ article.img.url }}" alt="{{ article.title }}">
+                            </a>
+                                <h2 class="h5">{{ article.title }}</h2>
+                                <p>{{ article.description|truncatewords:30|safe }}</p>
+                            
+                        </div>
+                        {% endfor %}
+                        
+                        {% for book in special_books %}
+                        <div class="swiper-slide">
+                            <a href="{% url 'blog:content_detail' model_type='book' pk=book.pk %}">
+                                <img src="{{ book.img.url }}" alt="{{ book.title }}">
+                            </a>
+                                <h2 class="h5">{{ book.title }}</h2>
+                                <p>{{ book.description|truncatewords:30|safe }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+            
+                    <!-- Add Pagination -->
+                    <div class="swiper-pagination"></div>
+            
+                    <!-- Add Navigation -->
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+ <!-- end section slidshow --> <!-- end section slidshow --> <!-- end section slidshow --> <!-- end section slidshow -->
+
+
+
+    <section class="py-5">
+        <div class="container px-5 my-5">
+            <div class="row gx-5 justify-content-center">
+                <div class="col-lg-8 col-xl-6">
+                    <div class="text-center">
+                        <h2 class="fw-bolder">یاداشت ها</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row gx-5">
+                {% for query in all_note_article %}
+                <div class="col-lg-4 mb-5">
+                    <div class="card h-100 shadow border-0">
+                        <img class="card-img-top" src="{{ query.img.url }}" width="100%" height="350px" alt="..." />
+                        <div class="card-body p-4">
+                            <a class="text-decoration-none link-dark stretched-link" href="{% url 'blog:content_detail' model_type='article' pk=query.pk %}"><h5 class="card-title mb-3">{{ query.title }}</h5></a>
+                            <p class="card-text mb-0">{{ query.description|linebreaksbr|slice:":400" }}</p>
+                        </div>
+                        <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
+                            <div class="d-flex align-items-end justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <div class="small">
+                                        <div class="text-muted">تاریخ انتشار : {{ query.publish }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% for note_book in all_note_book %}
+                <div class="col-lg-4 mb-5">
+                    <div class="card h-100 shadow border-0">
+                        <img class="card-img-top" src="{{ note_book.img.url }}" width="100%" height="350px" alt="..." />
+                        <div class="card-body p-4">
+                            <a class="text-decoration-none link-dark stretched-link" href="{% url 'blog:content_detail' model_type='book' pk=note_book.pk %}"><h5 class="card-title mb-3">{{ note_book.title }}</h5></a>
+                            <p class="card-text mb-0">{{ note_book.description|truncatewords:30|safe }}</p>
+                        </div>
+                        <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
+                            <div class="d-flex align-items-end justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <div class="small">
+                                        <div class="text-muted">تاریخ انتشار : {{ note_book.publish }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <h3 style="text-align: center;"><a href="{% url 'blog:notes' %}" class="full_post">ادامه یاداشت ها</a></h3>
+            </div>
+        </div>
+    </section>
+{% endblock %}

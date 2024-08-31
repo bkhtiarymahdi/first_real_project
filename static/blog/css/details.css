@@ -1,0 +1,47 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
+.body_details{
+    margin-top: 30px;
+}
+
+.data_box{
+    margin-right: 80px;
+    border: 2px solid white;
+    border-radius: 4px;
+    height: 300px;
+    width: 400px;
+    background-color: aliceblue;
+}
+
+.custome_imageing{
+    border-radius: 20px;
+    width: 600px;
+    height: 500px;
+}
+
+.tools_box{
+    text-decoration: none;
+    padding-top: 7px;
+    font-size: 25px;
+}
+
+.box_paragraph{
+    font-size: 20px;
+    text-align: justify;
+    box-shadow: 1px;
+    background-color: white;
+    border-radius: 5px;
+    margin: 35px 10px 20px 10px;
+}
+
+.paragraph{
+    padding: 0px 60px 20px 60px;
+}
+
+.title{
+    text-align: center;
+    padding: 10px;
+}

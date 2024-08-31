@@ -1,0 +1,35 @@
+body{
+    direction: rtl;
+    text-align: right;
+}
+
+.portfolio-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.portfolio-item {
+    margin: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.portfolio-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.portfolio-wrap img {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+}
+.portfolio-links {
+    margin-top: 10px;
+    text-align: center;
+}
+.portfolio-links a {
+    text-decoration: none;
+    color: #000;
+    font-size: 1.2em;
+}
