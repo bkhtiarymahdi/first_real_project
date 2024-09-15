@@ -3,6 +3,13 @@
 {% load widget_tweaks %}
 {% block auth_login %}
 	<div class="limiter">
+		{% if form.non_field_errors %}
+			<div class="errors" style="color: white; text-align: center; background-color: red;">
+				{% for error in form.non_field_errors %}
+					<span>{{error}}</span>
+				{% endfor %}
+			</div>
+		{% endif %}
 		<div class="container-login100" style="background-image: url('images/bg-01.jpg');">
 			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
 				<form class="login100-form validate-form" method="post">{% csrf_token %}
@@ -37,21 +44,11 @@
 							<a href="{% url 'account:register' %}">
 								<b>برای ثبت نام کلید کنید!</b>
 							</a>
-						</span>
+						</span><hr>
+						<div>
+						<a href="{% url 'account:password_reset' %}" class="myfont">فراموشی رمز عبور
+						</a>
 					</div>
-
-					<div class="flex-c-m">
-						<a href="#" class="login100-social-item bg1">
-							<i class="fa fa-facebook"></i>
-						</a>
-
-						<a href="#" class="login100-social-item bg2">
-							<i class="fa fa-twitter"></i>
-						</a>
-
-						<a href="#" class="login100-social-item bg3">
-							<i class="fa fa-google"></i>
-						</a>
 					</div>
 				</form>
 			</div>

@@ -14,31 +14,59 @@
 					<div class="wrap-input100 validate-input m-b-23" data-validate = "Username is reauired">
 						<span class="label-input100">نام کاربری</span>
 						{{ form.username|add_class:"input100" }}
+						{% if form.username.errors %}
+							<div class="errors" style="color: white; text-align: center; background-color: red;">
+								{% for error in form.username.errors %}
+									<span>{{error}}</span>
+								{% endfor %}
+							</div>
+						{% endif %}
 						<span class="focus-input100" data-symbol="&#xf206;"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input m-b-23" data-validate = "Username is reauired">
 						<span class="label-input100">ایمیل</span>
 						{{ form.email|add_class:"input100" }}
+						{% if form.email.errors %}
+							<div class="errors" style="color: white; text-align: center; background-color: red;">
+								{% for error in form.email.errors %}
+									<span>{{error}}</span>
+								{% endfor %}
+							</div>
+						{% endif %}
 						<span class="focus-input100" data-symbol="&#xf206;"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate="Password is required">
 						<span class="label-input100">رمز عبور</span>
 						{{ form.password1|add_class:"input100" }}
+						{% if form.password1.errors %}
+							<div class="errors" style="color: white; text-align: center; background-color: red;">
+								{% for error in form.password1.errors %}
+									<span>{{error}}</span>
+								{% endfor %}
+							</div>
+						{% endif %}
 						<span class="focus-input100" data-symbol="&#xf190;"></span>
 					</div><br>
 					
 					<div class="wrap-input100 validate-input" data-validate="Password is required">
 						<span class="label-input100">تکرار رمز عبور</span>
 						{{ form.password2|add_class:"input100" }}
+						{% if form.password2.errors %}
+							<div class="errors" style="color: white; text-align: center; background-color: red;">
+								{% for error in form.password2.errors %}
+									<span>{{error}}</span>
+								{% endfor %}
+							</div>
+						{% endif %}
 						<span class="focus-input100" data-symbol="&#xf190;"></span>
 					</div><br>
 					
 					<div class="container-login100-form-btn">
 						<div class="wrap-login100-form-btn">
 							<div class="login100-form-bgbtn"></div>
-							<button class="login100-form-btn">
+							<button class="login100-form-btn" type="submit">
 								ثبت نام
 							</button>
 						</div>
@@ -50,20 +78,6 @@
 								<b>برای ورود کلید کنید!</b>
 							</a>
 						</span>
-					</div>
-
-					<div class="flex-c-m">
-						<a href="#" class="login100-social-item bg1">
-							<i class="fa fa-facebook"></i>
-						</a>
-
-						<a href="#" class="login100-social-item bg2">
-							<i class="fa fa-twitter"></i>
-						</a>
-
-						<a href="#" class="login100-social-item bg3">
-							<i class="fa fa-google"></i>
-						</a>
 					</div>
 				</form>
 			</div>

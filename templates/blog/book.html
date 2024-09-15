@@ -1,4 +1,5 @@
 {% extends "blog/base.html" %}
+{% load humanize %}
 <!-- {% load static %} -->
 {% block content %} 
             
@@ -29,7 +30,7 @@
                                                 <div class="d-flex align-items-center">
                                                     <!-- <div class="text-muted">{{ book.publish }} &middot; 6 min read</div> -->
                                                     <div class="small">
-                                                        <div class="text-muted">تاریخ انتشار : {{ book.publish }}</div>
+                                                        <div class="text-muted">تاریخ انتشار : {{ book.create|naturaltime }}</div>
                                                     </div>
                                                 </div>
                                             </div>

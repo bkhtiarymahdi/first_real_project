@@ -1,45 +1,48 @@
 {% extends "blog/base.html" %}
-<!-- {% load static %} -->
-{% block content %} 
-            
-            <!-- Blog preview section-->
-            <section class="py-5">
-                <div class="container px-5 my-5">
-                    <div class="row gx-5 justify-content-center">
-                        <div class="col-lg-8 col-xl-6">
-                            <div class="text-center">
-                                <h2 class="fw-bolder" id="header_note">کلیپ ها</h2>
-                            </div>
-                        </div>
-                    </div><hr style="color: white;">
-                    <!-- div container -->
-                    {% for multimedia in multimedias %}
-                    {% comment %} <a href="{% url 'blog:detail' multimedia.id %}" style="text-decoration: none;"> {% endcomment %}
-                     <div class="row boxes">
-                        <div class="d-flex box_movie">
-                                <h4 class="tag_title">{{ multimedia.title }}<b>:</b></h4>
-                                <p class="tag_description_ww">{{ multimedia.description|truncatewords:15|safe }}</p>
-                            <div class="time_create_ww">{{multimedia.publish}}</div>
-                        </div>
-                    </div>
-                    </a>
-                     {% endfor %}
-                    <hr style="color: white;">
-                    <div class="pagination">
-                        <ul class="pagination">
-                            {% for page in page_obj.paginator.page_range %}
-                            <li class="page-item {% if page == page_obj.number %}active{% endif %}">
-                                <a class="page-link" href="?page={{ page }}">{{ page }}</a>
-                            </li>
-                            {% endfor %}
-                        </ul>
+{% load humanize %}
+{% load base_tags %}
+{% block content %}
+    <!-- Blog preview section-->
+    <section class="py-5">
+        <div class="container px-5 my-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-xl-6 text-center">
+                    <h2 class="fw-bolder" id="header_note">صوت و تصویر</h2>
+                </div>
+            </div>
+
+            <!-- لیست محصولات -->
+            {% for multimedia in multimedias %}
+            <div class="row boxes mt-4">
+                <div class="d-flex flex-column flex-md-row box_movie align-items-start">
+                    <h4 class="tag_title">{{ multimedia.title }}<b>:</b></h4>
+                    <p class="tag_description_ww ms-md-3">{{ multimedia.description|truncatewords:14|safe }}</p>
+                    <div class="time_create_ww ms-md-3">{{ multimedia.create|naturaltime }}</div>
+
+                    <!-- لینک به دیتیل محصول -->
+                    <div class="ms-md-3 mt-2 mt-md-0">
+                        {% if multimedia|isinstance_of:"voice" %}
+                            <a href="{% url 'blog:detail_multimedia' 'voice' multimedia.id %}" class="btn btn-success">مشاهده جزئیات</a>
+                        {% elif multimedia|isinstance_of:"shortsound" %}
+                            <a href="{% url 'blog:detail_multimedia' 'shortsound' multimedia.id %}" class="btn btn-success">مشاهده جزئیات</a>
+                        {% elif multimedia|isinstance_of:"movie" %}
+                            <a href="{% url 'blog:detail_multimedia' 'movie' multimedia.id %}" class="btn btn-success">مشاهده جزئیات</a>
+                        {% endif %}
                     </div>
                 </div>
-            </section>
-        </main>
+            </div>
+            {% endfor %}
+
+            <!-- حذف خط جداکننده -->
+            <div class="pagination mt-5">
+                <ul class="pagination">
+                    {% for page in page_obj.paginator.page_range %}
+                    <li class="page-item {% if page == page_obj.number %}active{% endif %}">
+                        <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </section>
 {% endblock %}
-
-
-
-
-

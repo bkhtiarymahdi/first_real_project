@@ -1,4 +1,5 @@
 {% extends "blog/base.html" %}
+{% load humanize %}
 <!-- {% load static %} -->
 {% block content %}
     <section>
@@ -9,7 +10,7 @@
                 <h3 style="text-align: center; margin-top: 10px;">جعبه ابزار</h3><hr>
                 <h6 class="tools_box">فایل پی دی اف :<a style="text-decoration: none;" href="{{object.pdf.url}}">دریافت فایل</a></h6>
                 <h6 class="tools_box">فایل وورد :<a style="text-decoration: none;" href="{{object.word.url}}">دریافت فایل</a></h6>
-                <h6 class="tools_box">تاریخ انتشار : {{object.publish}}</h6>
+                <h6 class="tools_box">تاریخ انتشار : {{object.create|naturaltime}}</h6>
                 <h6 class="tools_box">برچسب ها :<a style="text-decoration: none;" href="">{% for tag in object.tag.all %}, {{tag.name}}{% endfor %}</a></h6>
             </div>
         </div>
@@ -24,7 +25,7 @@
                 <h3 style="text-align: center; margin-top: 10px;">جعبه ابزار</h3><hr>
                 <h6 class="tools_box">فایل پی دی اف :<a style="text-decoration: none;" href="{{object.pdf.url}}">دریافت فایل</a></h6>
                 <h6 class="tools_box">فایل وورد :<a style="text-decoration: none;" href="{{object.word.url}}">دریافت فایل</a></h6>
-                <h6 class="tools_box">تاریخ انتشار : {{object.publish}}</h6>
+                <h6 class="tools_box">تاریخ انتشار : {{object.create|naturaltime}}</h6>
                 <h6 class="tools_box">برچسب ها :<a style="text-decoration: none;" href="">{% for tag in object.tag.all %}, {{tag.name}}{% endfor %}</a></h6>
             </div>
         </div>
@@ -39,7 +40,7 @@
                 <h3 style="text-align: center; margin-top: 10px;">جعبه ابزار</h3><hr>
                 <h6 class="tools_box">فایل پی دی اف :<a style="text-decoration: none;" href="{{object.pdf.url}}">دریافت فایل</a></h6>
                 <h6 class="tools_box">فایل وورد :<a style="text-decoration: none;" href="{{object.word.url}}">دریافت فایل</a></h6>
-                <h6 class="tools_box">تاریخ انتشار : {{object.publish}}</h6>
+                <h6 class="tools_box">تاریخ انتشار : {{object.create|naturaltime}}</h6>
                 <h6 class="tools_box">برچسب ها :<a style="text-decoration: none;" href="">{% for tag in object.tag.all %}, {{tag.name}}{% endfor %}</a></h6>
             </div>
         </div>

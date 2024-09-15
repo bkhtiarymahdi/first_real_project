@@ -4,15 +4,16 @@ from azbankgateways.urls import az_bank_gateways_urls
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', include('blog.urls')),
+    path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
-    path('comment/', include('comment.urls')),
-    # path('products/', include('E_commerce.urls')),
     path('account/', include('account.urls')),
+    path('comment/', include('comment.urls')),
     path('apiadmin/', include('api_admin.urls')),
-    # path("bankgateways/", az_bank_gateways_urls()),
-    path('api-auth/', include('rest_framework.urls'))
+    path('', include('django.contrib.auth.urls')),
+    path('products/', include('E_commerce.urls')),
+    path("bankgateways/", az_bank_gateways_urls()),
+    path('api-auth/', include('rest_framework.urls')),
 ]
 
 

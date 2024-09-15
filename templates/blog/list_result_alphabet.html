@@ -1,38 +1,48 @@
 {% extends "blog/base.html" %}
-<!-- {% load static %} -->
+{% load humanize %}
 {% block content %} 
-            
-            <!-- Blog preview section-->
-            <section class="py-5">
-                <div class="container px-5 my-5">
-                    <div class="row gx-5 justify-content-center">
-                        <div class="col-lg-8 col-xl-6">
-                            <div class="text-center">
-                                <h2 class="fw-bolder" id="header_note">{{letter}}</h2>
-                            </div>
-                        </div>
+    <!-- Blog preview section-->
+    <section class="py-5">
+        <div class="container px-5 my-5">
+            <div class="row gx-5 justify-content-center">
+                <div class="col-lg-8 col-xl-6">
+                    <div class="text-center">
+                        <h2 class="fw-bolder" id="header_note">نتایج جستجو برای حرف "{{ letter }}"</h2>
                     </div>
-                    
-                    <div class="container">
-                        <div class="row gx-5">
-                            {% if books %}
-                                {% for book in books %}
-                                    <div class="col-lg-4 mb-5" style="margin-top: 30px;">
-                                        <div class="card h-100 shadow border-0">
-                                                <a style="text-align: center; padding-top: 10px;" class="text-decoration-none link-dark stretched-link" href="{% url 'blog:content_detail' model_type='book' pk=book.pk %}">
-                                                    <h5 class="card-title mb-3">{{ book.title }}</h5>
-                                                </a>
-                                        </div>
-                                    
-                                    </div>
-                                {% endfor %}
-                            {% else %}
-                                <p style="color: rgb(255, 0, 0); font-size: 2em;">مطلبی بر اساس حرف "{{letter}}" پیدا نشد!</p>
-                            {% endif %}
-                        </div>
-                    </div>
-                            
                 </div>
-            </section>
-        </main>
+            </div>
+
+            <div class="container">
+                <div class="row gx-5">
+                    {% if results %}
+                        {% for model, items in results.items %}
+                            <div class="col-12 mb-5">
+                                <h3 class="fw-bolder text-white">{{ model|capfirst }}</h3>
+                                <div class="row">
+                                    {% for item in items %}
+                                        <div class="col-lg-4 mb-5" style="margin-top: 30px;">
+                                            <div class="card h-100 shadow border-0">
+                                                <a style="text-align: center; padding-top: 10px;" class="text-decoration-none link-dark stretched-link" 
+                                                href="{% if model == 'book' or model == 'article' or model == 'biography' %}
+                                                            {% url 'blog:content_detail' model_type=model|lower pk=item.pk %}
+                                                        {% elif model == 'voice' or model == 'movie' or model == 'shortsound' %}
+                                                            {% url 'blog:detail_multimedia' type=model|lower pk=item.pk %}
+                                                        {% elif model == 'pamphlets' or model == 'onlinecourse' or model == 'inpersoncourse' %}
+                                                            {% url 'E_commerce:detail_products' type=model|lower pk=item.pk %}
+                                                        {% endif %}">
+                                                    <h5 class="card-title mb-3">{{ item.title }}</h5>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color: rgb(255, 0, 0); font-size: 2em;">مطلبی بر اساس حرف "{{ letter }}" پیدا نشد!</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

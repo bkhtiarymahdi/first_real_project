@@ -2,25 +2,28 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView
 from django.urls import reverse
 from django.http import HttpResponse, Http404
+from django.contrib.contenttypes.models import ContentType
 
 import logging
+from itertools import chain
+from azbankgateways.exceptions import AZBankGatewaysException
 from azbankgateways import (
     bankfactories,
     models as bank_models,
     default_settings as settings,
 )
-from ..common.models import (
+from common.models import (
     Order,
     InPersonCourse,
     OnlineCourse,
     OrderItem,
-    Article,
+    Pamphlets,
     Transaction,
+    User_Access,
 )
-from azbankgateways.exceptions import AZBankGatewaysException
 
 
 class ListInPersonCourse(ListView):
@@ -30,28 +33,80 @@ class ListInPersonCourse(ListView):
     paginate_by = 4
 
 
-class ListInPersonCourse(ListView):
+class ListOnlineCourse(ListView):
     queryset = OnlineCourse.objects.all()
     template_name = "E_commerce/online_course.html"
     context_object_name = "onlinecourses"
     paginate_by = 4
 
 
-def course_detail_view(request, type, pk):
-    if type == "movie":
-        obj = get_object_or_404(InPersonCourse, pk=pk)
-    elif type == "voice":
-        obj = get_object_or_404(OnlineCourse, pk=pk)
-    # else:
-    #     return render(
-    #         request, "E_commerce/404.html"
-    #     )
+class PamphletsLisrview(ListView):
+    queryset = Pamphlets.objects.all()
+    template_name = "E_commerce/pamphlets.html"
+    context_object_name = "pamphlets"
+    paginate_by = 4
 
-    context = {
-        "object": obj,
-        "type": type,
-    }
-    return render(request, "E_commerce/detail_course.html", context)
+
+class ListProduct(ListView):
+    queryset = InPersonCourse.objects.all().order_by("-create")
+    template_name = "E_commerce/products.html"
+    paginate_by = 15
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        in_person_course = InPersonCourse.objects.all().order_by("-create")
+        onlinecourse = OnlineCourse.objects.all().order_by("-create")
+        pamphlets = Pamphlets.objects.all().order_by("-create")
+        combined = sorted(
+            chain(in_person_course, onlinecourse, pamphlets), key=lambda x: x.create
+        )
+        context["products"] = combined
+        return context
+
+
+# def detail_view_product(request, type, pk):
+#     if type == "inpersoncourse":
+#         obj = get_object_or_404(InPersonCourse, pk=pk)
+#     elif type == "onlinecourse":
+#         obj = get_object_or_404(OnlineCourse, pk=pk)
+#     elif type == "pamphlets":
+#         obj = get_object_or_404(Pamphlets, pk=pk)
+#     # else:
+#     #     return render(
+#     #         request, "404.html"
+#     #     )
+
+#     context = {
+#         "object": obj,
+#         "type": type,
+#     }
+#     return render(request, "E_commerce/detaile3model.html", context)
+
+
+def detail_view_product(request, type, pk):
+    if type == "pamphlets":
+        product = get_object_or_404(Pamphlets, id=pk)
+    elif type == "onlinecourse":
+        product = get_object_or_404(OnlineCourse, id=pk)
+    elif type == "inpersoncourse":
+        product = get_object_or_404(InPersonCourse, id=pk)
+
+    user_orders = Order.objects.filter(user=request.user, is_paid=True)
+    if type == "pamphlets":
+        has_purchased = OrderItem.objects.filter(
+            order__in=user_orders, pamphlets=product
+        ).exists()
+    elif type == "onlinecourse":
+        has_purchased = OrderItem.objects.filter(
+            order__in=user_orders, online_course=product
+        ).exists()
+    elif type == "inpersoncourse":
+        has_purchased = OrderItem.objects.filter(
+            order__in=user_orders, in_person_course=product
+        ).exists()
+
+    context = {"object": product, "type": type, "has_purchased": has_purchased}
+    return render(request, "E_commerce/detaile3model.html", context)
 
 
 @login_required
@@ -70,11 +125,13 @@ def add_to_cart(request, item_type, item_id):
         order_item, created = OrderItem.objects.get_or_create(
             order=order, online_course=item
         )
-    elif item_type == "article":
-        item = get_object_or_404(Article, id=item_id)
-        order_item, created = OrderItem.objects.get_or_create(order=order, article=item)
+    elif item_type == "pamphlets":
+        item = get_object_or_404(Pamphlets, id=item_id)
+        order_item, created = OrderItem.objects.get_or_create(
+            order=order, pamphlets=item
+        )
     else:
-        return redirect("home")
+        return redirect("blog/home")
 
     if not created:
         order_item.quantity += 1
@@ -82,7 +139,11 @@ def add_to_cart(request, item_type, item_id):
 
     messages.success(request, "با موفقیت به سبد اضافه شد.")
 
-    return redirect("cart_view")
+    referer = request.META.get("HTTP_REFERER")
+    if referer:
+        return redirect(referer)
+    else:
+        return redirect("blog/home")
 
 
 @login_required
@@ -90,12 +151,11 @@ def view_cart(request):
     global total_amount
     order = Order.objects.filter(user=request.user, is_paid=False).first()
 
-    if not order:
-        return redirect("home")
-
     transaction = Transaction.objects.filter(order=order).first()
 
-    total_amount = sum(item.quantity * item.price for item in order.items.all())
+    total_amount = sum(
+        (item.quantity or 0) * (item.price or 0) for item in order.items.all()
+    )
     order.total_amount = total_amount
     order.save()
 
@@ -119,10 +179,12 @@ def remove_from_cart(request, item_id):
 
     order_item.delete()
 
-    order.total_amount = sum(item.quantity * item.price for item in order.items.all())
+    order.total_amount = sum(
+        (item.quantity or 0) * (item.price or 0) for item in order.items.all()
+    )
     order.save()
 
-    return redirect("cart_view")
+    return redirect("E_commerce:view_cart")
 
 
 def go_to_gateway_view(request):
@@ -134,12 +196,12 @@ def go_to_gateway_view(request):
     factory = bankfactories.BankFactory()
     try:
         bank = (
-            factory.auto_create()
+            factory.create()
         )  # or factory.create(bank_models.BankType.BMI) or set identifier
         bank.set_request(request)
         bank.set_amount(amount)
         # یو آر ال بازگشت به نرم افزار برای ادامه فرآیند
-        bank.set_client_callback_url(reverse("callback-gateway"))
+        bank.set_client_callback_url("/callback-gateway/")
         # bank.set_mobile_number(user_mobile_number)  # اختیاری
 
         # در صورت تمایل اتصال این رکورد به رکورد فاکتور یا هر چیزی که بعدا بتوانید ارتباط بین محصول یا خدمات را با این
@@ -171,25 +233,19 @@ def callback_gateway_view(request):
 
         order.is_paid = True
         order.save()
-
-        transaction = Transaction.objects.create(
-            user=request.user,
-            order=order,
-            amount=bank_record.amount,
-            status="completed",
-            tracking_code=tracking_code,
-        )
-
+        # ایجاد رکورد در User_Access برای هر محصول خریداری‌شده
         for item in order.items.all():
-            if item.in_person_course:
-                item.in_person_course.activate_for_user(request.user)
-            elif item.online_course:
-                item.online_course.activate_for_user(request.user)
-            elif item.article:
-                item.article.activate_for_user(request.user)
+            if isinstance == item.in_person_course:
+                InPersonCourse.capacity -= 1
+                InPersonCourse.list_of_registered_people += f"{request.user}\n"
+            #     item.product.activate_for_user(request.user)
+            # elif isinstance(item.online_course, OnlineCourse):
+            #     item.product.activate_for_user(request.user)
+            # elif isinstance(item.pamphlets, InPersonCourse):
+            #     item.product.activate_for_user(request.user)
 
         messages.success(request, "پرداخت با موفقیت انجام شد.")
     else:
         messages.error(request, "پرداخت با شکست مواجه شد.")
 
-    return redirect("blog/home")
+    return redirect("blog:home")

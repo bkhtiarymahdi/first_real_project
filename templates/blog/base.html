@@ -11,6 +11,7 @@
         <!-- Favicon--> 
         <link rel="icon" type="image/x-icon" href="" />
         <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" integrity="sha384-dpuaG1suU0eT09tx5plTaGMLBsfDLzUCCUXOY2j/LSvXYuG6Bqs43ALlhIqAJVRb" crossorigin="anonymous">
         <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" /> -->
         <!-- Core theme CSS (includes Bootstrap)-->
@@ -30,8 +31,12 @@
         
     </head>
     <body class="container p-4 my-5 rounded">
-      <h6 style="color: white;">{{user.username}}</h6>
-        <a class="navbar-brand" href="{% url 'blog:home' %}"><img src="{% static 'blog/images/0333.png' %}" class="img-heder" style="margin-bottom: 10px;" alt=""></a>
+      <div class="d-flex justify-content-between align-items-center">
+        <a class="navbar-brand" href="{% url 'blog:home' %}">
+            <img src="{% static 'blog/images/0333.png' %}" class="img-heder" style="margin-bottom: 10px;" alt="">
+        </a>
+        <h6 class="p-2" style="color: white;">{{user.username}}</h6>
+    </div>
         <div>
             <main>
                 <!-- Navigation-->
@@ -57,9 +62,7 @@
                                 <div class="text-center">
                                     <div class="fs-4 mb-4 special-titles">اگر علاقه‌مند هستید تا آخرین اخبار سایت ما را بروز دریافت کنید به کانال ما بپیوندید</div>
                                     <div class="d-flex align-items-center justify-content-center">
-                                        <a href="https://eitaa.com/tasnimnews"><img class="rounded-circle me-3" src="{% static 'blog/images/Eitaa-vector-logo.png' %}" height="60px" width="60px" alt="..." /></a> 
-                                        <a href="https://eitaa.com/tasnimnews"><img class="rounded-circle me-3" src="{% static 'blog/images/telegram.png' %}" height="60px" width="60px" alt="..." /></a> 
-                                        <a href="https://eitaa.com/tasnimnews"><img class="rounded-circle me-3" src="{% static 'blog/images/x.png' %}" height="60px" width="60px" alt="..." /></a> 
+                                        <a href="https://eitaa.com/tasnimnews"><img class="rounded-circle me-3" src="{% static 'blog/images/Eitaa-vector-logo.png' %}" height="60px" width="60px" alt="..." /></a>
                                         <a href="https://eitaa.com/tasnimnews"><img class="rounded-circle me-3" src="{% static 'blog/images/instagram.webp' %}" height="60px" width="60px" alt="..." /></a> 
                                     </div>
                                 </div>
@@ -76,70 +79,36 @@
             <div class="custom-container" style="border-radius: 7px;">
               <div class="custom-row">
                 <div class="custom-column">
-                  <h5>دیدگاه‌ها</h5>
+                  <h5>آثار مکتوب</h5>
                   <ul>
-                    <li>ولایت و مهدویت</li>
-                    <li>تعلیم و تربیت</li>
-                    <li>اخلاق و معنویت</li>
-                    <li>فرهنگی</li>
-                    <li>سیاسی</li>
-                    <li>تحلیل تاریخ</li>
-                    <li>هنر و رسانه</li>
+                    <li><a  class="link-light text-decore" style="text-decoration: none" href="{% url 'blog:articles' %}">مقالات</a></li>
+                    <li><a  class="link-light text-decore" style="text-decoration: none" href="{% url 'blog:books' %}">کتاب ها</a></li>
+                    <li><a  class="link-light text-decore" style="text-decoration: none" href="{% url 'blog:biography' %}">زندگی نامه</a></li>
                   </ul>
                 </div>
                 <div class="custom-column">
-                  <h5>بیان‌ها</h5>
+                  <h5>دروه ها</h5>
                   <ul>
-                    <li>گفتگو</li>
-                    <li>سخنرانی</li>
-                    <li>راهکار</li>
-                    <li>راهبرد</li>
-                    <li>آینده‌نگری</li>
-                  </ul>
-                </div>
-                <div class="custom-column">
-                  <h5>قطعه‌ها</h5>
-                  <ul>
-                    <li>اشعار</li>
-                    <li>عبارات کوتاه</li>
-                    <li>مناجات</li>
-                    <li>مثال ها</li>
-                    <li>روزه ها</li>
-                    <li>خاطرات</li>
-                  </ul>
-                </div>
-                <div class="custom-column">
-                  <h5>یادداشت‌های استاد</h5>
-                  <ul>
-                    <li>کتابخانه</li>
-                    <li>تبلیغات</li>
-                    <li>مقالات</li>
-                    <li>سیر مطالعاتی</li>
-                    <li>معرفی کتاب</li>
-                    <li>مستندات</li>
+                    <li><a  class="link-light text-decore" style="text-decoration: none" href="{% url 'E_commerce:inpersoncourses' %}">دوره حضوری</a></li>
+                    <li><a  class="link-light text-decore" style="text-decoration: none" href="{% url 'E_commerce:onlincourses' %}">دوره آنلاین</a></li>
+                    <li><a  class="link-light text-decore" style="text-decoration: none" href="{% url 'E_commerce:pamphlets' %}">جزوه ها</a></li>
                   </ul>
                 </div>
                 <div class="custom-column">
                   <h5>چندرسانه‌ای</h5>
                   <ul>
-                    <li>فهرست‌ها</li>
-                    <li>موضوعی</li>
-                    <li>صوتی</li>
-                    <li>تصویری</li>
-                    <li>کلیپ صوتی</li>
-                    <li>کلیپ تصویری</li>
-                    <li>محصولات</li>
+                    <li><a  class="link-light text-decore" style="text-decoration: none" href="{% url 'blog:voices' %}">صوتی</a></li>
+                    <li><a  class="link-light text-decore" style="text-decoration: none" href="{% url 'blog:shortsounds' %}">کلیپ صوتی کوتاه</a></li>
+                    <li><a  class="link-light text-decore" style="text-decoration: none" href="{% url 'blog:movies' %}">کلیپ تصویری</a></li>
+                    <li><a  class="link-light text-decore" style="text-decoration: none" href="{% url 'blog:quoteimages' %}">تصاویر</a></li>
                   </ul>
                 </div>
                 <div class="custom-column">
                   <h5>نوبت شما</h5>
                   <ul>
-                    <li>پرسش و پاسخ</li>
-                    <li>بیاید از تجربه شما بگویید</li>
-                    <li>نظرات شما</li>
-                    <li>سخنان ناظر گذار</li>
-                    <li>همکاری با ما</li>
-                    <li>بپرسید... پاسخ دهید...</li>
+                    <li><a  class="link-light text-decore" style="text-decoration: none" href="{% url 'blog:about_us' %}">درباره ما</a></li>
+                    <li><a  class="link-light text-decore" style="text-decoration: none" href="{% url 'blog:contact_information' %}">راه های ارتباطی</a></li>
+                    <li><a  class="link-light text-decore" style="text-decoration: none" href="{% url 'blog:work_with_us' %}">همکاری با ما</a></li>
                   </ul>
                 </div>
               </div><hr>
@@ -168,16 +137,46 @@
                     disableOnInteraction: false,
                 },
                 loop: true,
-                slidesPerView: 3,
                 spaceBetween: 10,
                 centeredSlides: false,
+                // تنظیمات ریسپانسیو
+                breakpoints: {
+                    // وقتی صفحه نمایش بزرگتر از 1024 پیکسل است
+                    1024: {
+                        slidesPerView: 3,
+                        spaceBetween: 10,
+                    },
+                    // وقتی صفحه نمایش بزرگتر از 768 پیکسل است
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 10,
+                    },
+                    // وقتی صفحه نمایش کوچکتر از 768 پیکسل است
+                    0: {
+                        slidesPerView: 1,
+                        spaceBetween: 10,
+                    }
+                }
             });
+
         </script>
         <script>
             setTimeout(function() {
                 document.getElementById('payment-message').style.display = 'none';
             }, 7000); // مخفی کردن پیام پس از 7 ثانیه
         </script>
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+              const successMessage = document.getElementById('success-message');
+              if (successMessage) {
+                  successMessage.style.display = 'block';
+                  setTimeout(() => {
+                      successMessage.style.display = 'none';
+                  }, 5000);
+              }
+          });
+      </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
         
     </body>
 </html>

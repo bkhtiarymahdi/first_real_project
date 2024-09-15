@@ -1,4 +1,5 @@
 {% extends "blog/base.html" %}
+{% load humanize %}
 <!-- {% load static %} -->
 {% block content %} 
             
@@ -29,14 +30,14 @@
                                                 <div class="d-flex align-items-center">
                                                     <!-- <div class="text-muted">{{ book.publish }} &middot; 6 min read</div> -->
                                                     <div class="d-flex small">
-                                                        <div>
+                                                        <!-- <div>
                                                         {% if article.amount %}
                                                             <p  class="d-flex" style="padding-left: 40px;">{{ article.amount }} تومان</p>
                                                         {% else %}
                                                             <p style="padding-left: 80px;">رایگان</p>
                                                         {% endif %}
-                                                        </div>
-                                                        <div class="text-muted" style="margin-right: 5px;">تاریخ انتشار : {{ article.publish }}</div>
+                                                        </div> -->
+                                                        <div class="text-muted" style="margin-right: 5px;">تاریخ انتشار : {{ article.create|naturaltime }}</div>
                                                     </div>
                                                 </div>
                                             </div>

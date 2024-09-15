@@ -1,0 +1,182 @@
+{% extends "blog/base.html" %}
+{% load humanize %}
+<!-- {% load static %} -->
+{% block content %}
+<section>
+    {% if messages %}
+        <div id="success-message" class="alert alert-success text-center text-white bg-success m-0" role="alert" style="display: none; padding: 10px 20px;">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if has_purchased %}
+        {% if type == 'inpersoncourse' %}
+        <div class="container my-5">
+            <div class="text-center">
+                <!-- تصویر -->
+                <img class="img-fluid rounded shadow-lg mb-4" src="{{ object.img.url }}" alt="{{ object.title }}">
+                
+                <!-- عنوان و توضیحات -->
+                <div class="box_paragraph">
+                    <h2 style="font-size: 1.5em;" class="title display-5 fw-bold text-primary">{{ object.title }}</h2>
+                    <hr class="my-3">
+                    <p class="paragraph lead text-muted">{{ object.description }}</p>
+                </div>
+        
+                <!-- برچسب‌ها -->
+                <div class="mt-3">
+                    <span class="badge bg-secondary fs-5">برچسب‌ها: </span>
+                    {% for tag in object.tag.all %}
+                        <span class="badge bg-secondary fs-5">{{ tag.name }}</span>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>        
+        {% elif type == 'onlinecourse' %}
+        <div class="text-center">
+            <img src="{{ object.img.url }}" alt="" class="p-5 img-fluid rounded" style="width: 800px; height: 600px;">
+        </div>    
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <a href="{{object.pdf.url}}" class="btn btn-primary">دانلود فایل PDF</a>
+            </div>
+            <div class="col-auto">
+                <a href="{{object.word.url}}" class="btn btn-primary">دانلود فایل Word</a>
+            </div>
+            <div class="col-auto">
+                <a href="{{object.video.url}}" class="btn btn-primary">دانلود فیلم دوره</a>
+            </div>
+            <div class="col-auto">
+                <span class="btn btn-secondary">تاریخ انتشار: {{object.create|naturaltime}}</span>
+            </div>
+            <div class="col-auto">
+                <span class="btn btn-secondary">
+                    برچسب‌ها:
+                    {% for tag in object.tag.all %}
+                        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </span>
+            </div>
+        </div>
+        </div>
+        <div class="box_paragraph">
+            <h2 class="title">{{object.title}}</h2><hr>
+            <p class="paragraph">{{object.description}}</p>
+        </div>
+        {% elif type == 'pamphlets' %}
+        <div class="text-center">
+            <img src="{{ object.img.url }}" alt="" class="p-5 img-fluid rounded" style="width: 800px; height: 600px;">
+        </div>    
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <a href="{{object.pdf.url}}" class="btn btn-primary">دانلود فایل PDF</a>
+            </div>
+            <div class="col-auto">
+                <a href="{{object.word.url}}" class="btn btn-primary">دانلود فایل Word</a>
+            </div>
+            <div class="col-auto">
+                <span class="btn btn-secondary">تاریخ انتشار: {{object.create|naturaltime}}</span>
+            </div>
+            <div class="col-auto">
+                <span class="btn btn-secondary">
+                    برچسب‌ها:
+                    {% for tag in object.tag.all %}
+                        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </span>
+            </div>
+        </div>
+        </div>
+        <div class="box_paragraph">
+            <h2 class="title">{{object.title}}</h2><hr>
+            <p class="paragraph">{{object.description}}</p>
+        </div>
+    {% endif %}
+        <!-- The second part -->
+
+    {% else %}
+        {% if type == 'inpersoncourse' %}
+        <div class="container my-5">
+            <div class="text-center">
+                <img class="img-fluid rounded shadow-lg mb-4" src="{{ object.img.url }}" alt="{{ object.title }}">
+                
+                <div class="box_paragraph">
+                    <h2 style="font-size: 1.5em;" class="title display-5 fw-bold text-primary">{{ object.title }}</h2>
+                    <hr class="my-3">
+                    <p class="paragraph lead text-muted">{{ object.description|truncatewords:30 }}</p>
+                    <a href="{% url 'E_commerce:add_to_cart' 'inpersoncourse' object.id %}" class="d-flex justify-content-center btn btn-primary">اضافه کردن به سبد خرید</a>
+                </div>
+        
+                <div class="mt-3">
+                    <span class="badge bg-secondary fs-5">برچسب‌ها: </span>
+                    {% for tag in object.tag.all %}
+                        <span class="badge bg-secondary fs-5">{{ tag.name }}</span>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>        
+        {% elif type == 'onlinecourse' %}
+        <div class="text-center">
+            <img src="{{ object.img.url }}" alt="" class="p-5 img-fluid rounded" style="width: 800px; height: 600px;">
+        </div>    
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <span class="btn btn-secondary">تاریخ انتشار: {{object.create|naturaltime}}</span>
+            </div>
+            <div class="col-auto">
+                <span class="btn btn-secondary">
+                    برچسب‌ها:
+                    {% for tag in object.tag.all %}
+                        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </span>
+            </div>
+        </div>
+        </div>
+        <div class="box_paragraph">
+            <h2 class="title">{{object.title}}</h2><hr>
+            <p class="paragraph">{{object.description|truncatewords:50}}</p>
+            <a href="{% url 'E_commerce:add_to_cart' 'onlinecourse' object.id %}" class="d-flex justify-content-center btn btn-primary">اضافه کردن به سبد خرید</a>
+        </div>
+        {% elif type == 'pamphlets' %}
+        <div class="text-center">
+            <img src="{{ object.img.url }}" alt="" class="p-5 img-fluid rounded" style="width: 800px; height: 600px;">
+        </div>    
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <span class="btn btn-secondary">تاریخ انتشار: {{object.create|naturaltime}}</span>
+            </div>
+            <div class="col-auto">
+                <span class="btn btn-secondary">
+                    برچسب‌ها:
+                    {% for tag in object.tag.all %}
+                        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </span>
+            </div>
+        </div>
+        </div>
+        <div class="box_paragraph">
+            <h2 class="title">{{object.title}}</h2><hr>
+            <p class="paragraph">{{object.description|truncatewords:30}}</p>
+            <a href="{% url 'E_commerce:add_to_cart' 'pamphlets' object.id %}" class="d-flex justify-content-center btn btn-primary">اضافه کردن به سبد خرید</a>
+        </div>
+        {% endif %}
+        
+    {% endif %}
+</section>
+{% endblock %} 
+
+
+
+
+
+
+
+
+
+
+
+
+

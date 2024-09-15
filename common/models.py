@@ -1,16 +1,20 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth import get_user_model
 from django.utils.text import slugify
-
+from django.utils.html import format_html
+from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.fields import GenericRelation
 
 from comment.models import Comment
+import time
 from taggit.managers import TaggableManager
 from converter import changes
 from .choices import view, type_course, status_transaction
 from django.contrib.auth import get_user_model
 from converter.changes import price_amount
+from account.models import Profile
 
 
 class BaseModel(models.Model):
@@ -20,6 +24,10 @@ class BaseModel(models.Model):
     @property
     def publish(self):
         return changes.converter_date_time(self.create)
+
+    # def elapsed_time(self):
+    #     time_now = time.time
+    #     return
 
     class Meta:
         abstract = True
@@ -36,6 +44,9 @@ class Title(BaseModel):
 
     def __str__(self):
         return self.header_title
+
+    def img_tag(self):
+        return format_html("<img src='{}'>".format(self.img.url))
 
 
 class Category(BaseModel):
@@ -91,11 +102,8 @@ class Article(BaseModel):
     pdf = models.FileField(
         upload_to="text", storage=None, max_length=100, verbose_name="فایل پی دی اف"
     )
-    amount = models.BigIntegerField(null=True, blank=False, verbose_name="مبلغ")
     comments = GenericRelation(Comment)
     tag = TaggableManager()
-
-
 
     class Meta:
         verbose_name_plural = "مقالات"
@@ -107,6 +115,9 @@ class Article(BaseModel):
 
     def __str__(self):
         return self.title
+
+    def img_tag(self):
+        return format_html("<img width=80 src='{}'>".format(self.img.url))
 
 
 class Book(BaseModel):
@@ -133,6 +144,9 @@ class Book(BaseModel):
     def __str__(self):
         return self.name
 
+    def img_tag(self):
+        return format_html("<img src='{}'>".format(self.img.url))
+
 
 class Biography(BaseModel):
     title = models.CharField(max_length=100, verbose_name="عنوان")
@@ -150,6 +164,9 @@ class Biography(BaseModel):
     def __str__(self):
         return self.title
 
+    def img_tag(self):
+        return format_html("<img src='{}'>".format(self.img.url))
+
 
 class QuoteImage(BaseModel):
     title = models.CharField(max_length=20, verbose_name="عنوان")
@@ -164,6 +181,9 @@ class QuoteImage(BaseModel):
 
     def __str__(self):
         return f"{self.img}"
+
+    def img_tag(self):
+        return format_html("<img src='{}'>".format(self.img.url))
 
 
 class Movie(BaseModel):
@@ -186,6 +206,9 @@ class Movie(BaseModel):
 
     def __str__(self):
         return self.title
+
+    def img_tag(self):
+        return format_html("<img src='{}'>".format(self.img.url))
 
 
 class Voice(BaseModel):
@@ -211,6 +234,9 @@ class Voice(BaseModel):
 
     def __str__(self):
         return self.title
+
+    def img_tag(self):
+        return format_html("<img src='{}'>".format(self.img.url))
 
 
 class ShortSound(BaseModel):
@@ -246,6 +272,9 @@ class ShortSound(BaseModel):
 
     def __str__(self):
         return self.title
+
+    def img_tag(self):
+        return format_html("<img src='{}'>".format(self.img.url))
 
 
 class OnlineCourse(BaseModel):
@@ -283,6 +312,13 @@ class OnlineCourse(BaseModel):
     )
     tag = TaggableManager()
 
+    def activate_for_user(self, user):
+        User_Access.objects.create(
+            user=user,
+            content_type=ContentType.objects.get_for_model(self),
+            object_id=self.id,
+        )
+
     def price(self):
         return price_amount(self.amount)
 
@@ -293,6 +329,9 @@ class OnlineCourse(BaseModel):
 
     class Meta:
         verbose_name_plural = "دوره غیر حضوری"
+
+    def img_tag(self):
+        return format_html("<img src='{}'>".format(self.img.url))
 
 
 class InPersonCourse(BaseModel):
@@ -307,17 +346,26 @@ class InPersonCourse(BaseModel):
         blank=True, null=True, default=1, verbose_name="ظرفیت"
     )
     amount = models.DecimalField(max_digits=15, decimal_places=3, verbose_name="مبلغ")
+    list_of_registered_people = models.TextField(
+        blank=True, null=True, verbose_name="اسامی افراد ثبت نام شده"
+    )
     # Registrants = models.PositiveIntegerField(default=0, verbose_name="تعداد شرکت کننده ها")
     tag = TaggableManager()
 
-    def activate_for_user(self, user):
-        User_Access.objects.create(user=user, in_person_course=self)
+    # def activate_for_user(self, user):
+    #     User_Access.objects.create(user=user, in_person_course=self)
 
-    def is_pay(self):
-        print(self.user_accesses.all())
-        return self.user_accesses.all()
-    print(is_pay)
-    
+    # def is_pay(self):
+    #     print(self.user_accesses.all())
+    #     return self.user_accesses.all()
+    # print(InPersonCourse.)
+
+    def activate_for_user(self, user):
+        User_Access.objects.create(
+            user=user,
+            content_type=ContentType.objects.get_for_model(self),
+            object_id=self.id,
+        )
 
     def price(self):
         return price_amount(self.amount)
@@ -330,82 +378,144 @@ class InPersonCourse(BaseModel):
     class Meta:
         verbose_name_plural = "دوره حضوری"
 
-
-# class Order(BaseModel):
-#     user = models.ForeignKey(
-#         get_user_model(), on_delete=models.CASCADE, verbose_name="کاربر"
-#     )
-#     is_paid = models.BooleanField(default=False, verbose_name="آیا پرداخت شده است؟")
-#     total_amount = models.DecimalField(
-#         max_digits=10, decimal_places=3, verbose_name="جمع مبالغ"
-#     )
-
-#     def __str__(self):
-#         return self.user.get_username()
-
-#     class Meta:
-#         verbose_name_plural = "سفارشات"
+    def img_tag(self):
+        return format_html("<img src='{}'>".format(self.img.url))
 
 
-# class OrderItem(BaseModel):
-#     order = models.ForeignKey(
-#         Order, related_name="items", on_delete=models.CASCADE, verbose_name="سفارش"
-#     )
-#     in_person_course = models.ForeignKey(
-#         InPersonCourse,
-#         null=True,
-#         blank=True,
-#         on_delete=models.CASCADE,
-#         verbose_name="دوره حضوری",
-#     )
-#     online_course = models.ForeignKey(
-#         OnlineCourse,
-#         null=True,
-#         blank=True,
-#         on_delete=models.CASCADE,
-#         verbose_name="دوره آنلاین",
-#     )
-#     article = models.ForeignKey(
-#         Article, null=True, blank=True, on_delete=models.CASCADE, verbose_name="مقالات"
-#     )
-#     quantity = models.PositiveIntegerField(default=1, verbose_name="تعداد")
-#     price = models.DecimalField(max_digits=10, decimal_places=3, verbose_name="قیمت")
+class Pamphlets(BaseModel):
+    title = models.CharField(max_length=100, verbose_name="عنوان")
+    category = models.ManyToManyField(
+        Category, verbose_name="دسته بندی ", related_name="pamphlets"
+    )
+    description = models.TextField(verbose_name="توضیحات")
+    special = models.BooleanField(default=False, verbose_name="آیا این دوره ویژه هست؟")
+    img = models.ImageField(upload_to="image", verbose_name="تصویر")
+    word = models.FileField(
+        upload_to="text", storage=None, max_length=100, verbose_name="فایل وورد"
+    )
+    pdf = models.FileField(
+        upload_to="text", storage=None, max_length=100, verbose_name="فایل پی دی اف"
+    )
+    amount = models.DecimalField(max_digits=15, decimal_places=3, verbose_name="مبلغ")
+    tag = TaggableManager()
 
-#     def __str__(self):
-#         return Order.__str__()
+    def activate_for_user(self, user):
+        User_Access.objects.create(
+            user=user,
+            content_type=ContentType.objects.get_for_model(self),
+            object_id=self.id,
+        )
 
-#     class Meta:
-#         verbose_name_plural = "موارد سفارش شده"
+    def price(self):
+        return price_amount(self.amount)
 
+    price.short_description = "قیمت"
 
-# class Transaction(BaseModel):
-#     order = models.OneToOneField(
-#         Order, on_delete=models.CASCADE, related_name="transactions"
-#     )
-#     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-#     transaction_id = models.CharField(max_length=100, unique=True)
-#     amount = models.DecimalField(max_digits=10, decimal_places=3)
-#     status = models.CharField(max_length=20, choices=status_transaction)
+    def __str__(self):
+        return self.title
 
-#     def __str__(self):
-#         self.order_number
+    class Meta:
+        verbose_name_plural = "جزوات"
 
-#     class Meta:
-#         verbose_name_plural = "پرداخت ها"
+    def img_tag(self):
+        return format_html("<img src='{}'/>".format(self.img.url))
 
 
-class User_Access(BaseModel):
+class Order(BaseModel):
     user = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, verbose_name="کاربر"
+    )
+    is_paid = models.BooleanField(default=False, verbose_name="آیا پرداخت شده است؟")
+    total_amount = models.DecimalField(
+        max_digits=10,
+        null=True,
+        default=0,
+        blank=True,
+        decimal_places=3,
+        verbose_name="جمع مبالغ",
+    )
+
+    def __str__(self):
+        return self.user.get_username()
+
+    class Meta:
+        verbose_name_plural = "سفارشات"
+
+
+class OrderItem(BaseModel):
+    order = models.ForeignKey(
+        Order, related_name="items", on_delete=models.CASCADE, verbose_name="سفارش"
     )
     in_person_course = models.ForeignKey(
         InPersonCourse,
         null=True,
         blank=True,
-        related_name='user_accesses',
         on_delete=models.CASCADE,
         verbose_name="دوره حضوری",
     )
+    online_course = models.ForeignKey(
+        OnlineCourse,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        verbose_name="دوره آنلاین",
+    )
+    pamphlets = models.ForeignKey(
+        Pamphlets, null=True, blank=True, on_delete=models.CASCADE, verbose_name="جزوات"
+    )
+    quantity = models.PositiveIntegerField(
+        default=1, blank=True, null=True, verbose_name="تعداد"
+    )
+    price = models.DecimalField(
+        max_digits=10,
+        default=1,
+        blank=True,
+        null=True,
+        decimal_places=3,
+        verbose_name="قیمت",
+    )
+
+    def save(self, *args, **kwargs):
+        if self.in_person_course:
+            self.price = self.in_person_course.amount
+        elif self.online_course:
+            self.price = self.online_course.amount
+        elif self.online_course:
+            self.price = self.pamphlets.amount
+
+        super(OrderItem, self).save(*args, **kwargs)
+
+    # def __str__(self):
+    #     return Order.__str__()
+
+    class Meta:
+        verbose_name_plural = "موارد سفارش شده"
+
+
+class Transaction(BaseModel):
+    order = models.OneToOneField(
+        Order, on_delete=models.CASCADE, related_name="transactions"
+    )
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    transaction_id = models.CharField(max_length=100, unique=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=3)
+    status = models.CharField(max_length=20, choices=status_transaction)
 
     def __str__(self):
-        return self.user.username
+        self.order_number
+
+    class Meta:
+        verbose_name_plural = "پرداخت ها"
+
+
+class User_Access(BaseModel):
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    purchased_item = GenericForeignKey("content_type", "object_id")
+
+    def __str__(self):
+        return f"{self.user.username} - {self.purchased_item}"
+
+    class Meta:
+        verbose_name_plural = "دسترسی های کاربر به دوره ها"

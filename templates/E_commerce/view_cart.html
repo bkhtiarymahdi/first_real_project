@@ -3,170 +3,98 @@
 {% block content %}
 
 <!-- Blog preview section -->
-<section class="h-100 h-custom" style="background-color: #d2c9ff;">
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-12">
-          <div class="card card-registration card-registration-2" style="border-radius: 15px;">
-            <div class="card-body p-0">
-              <div class="row g-0">
-                <div class="col-lg-8">
-                  <div class="p-5">
-                    <div class="d-flex justify-content-between align-items-center mb-5">
-                      <h1 class="fw-bold mb-0">Shopping Cart</h1>
-                      <h6 class="mb-0 text-muted">3 items</h6>
+<section class="p-5 h-100 h-custom rounded">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12">
+        <div class="card card-registration card-registration-2" style="border-radius: 15px;">
+          <div class="card-body p-0">
+            <div class="row g-0">
+              <div class="col-lg-8">
+                <div class="p-5">
+                  <div class="d-flex justify-content-between align-items-center mb-5">
+                    <h1 class="fw-bold mb-0">سبد خرید</h1>
+                  </div>
+                  <hr class="my-4">
+
+                  <!-- Loop through order items -->
+                  {% for item in order_items %}
+                  <div class="row mb-4 d-flex justify-content-between align-items-center">
+                    <div class="col-md-2 col-lg-2 col-xl-2">
+                      <!-- Check for image in each model -->
+                      {% if item.online_course and item.online_course.img %}
+                        <img src="{{ item.online_course.img.url }}" class="img-fluid rounded-3" alt="Product Image">
+                      {% elif item.in_person_course and item.in_person_course.img %}
+                        <img src="{{ item.in_person_course.img.url }}" class="img-fluid rounded-3" alt="Product Image">
+                      {% elif item.pamphlets and item.pamphlets.img %}
+                        <img src="{{ item.pamphlets.img.url }}" class="img-fluid rounded-3" alt="Product Image">
+                      {% else %}
+                        <!-- Default image if none exists -->
+                        <img src="/static/images/default_image.jpg" class="img-fluid rounded-3" alt="Default Image">
+                      {% endif %}
                     </div>
-                    <hr class="my-4">
-  
-                    <div class="row mb-4 d-flex justify-content-between align-items-center">
-                      <div class="col-md-2 col-lg-2 col-xl-2">
-                        <img
-                          src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img5.webp"
-                          class="img-fluid rounded-3" alt="Cotton T-shirt">
-                      </div>
-                      <div class="col-md-3 col-lg-3 col-xl-3">
-                        <h6 class="text-muted">Shirt</h6>
-                        <h6 class="mb-0">Cotton T-shirt</h6>
-                      </div>
-                      <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
-                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
-                          onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                          <i class="fas fa-minus"></i>
-                        </button>
-  
-                        <input id="form1" min="0" name="quantity" value="1" type="number"
-                          class="form-control form-control-sm" />
-  
-                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
-                          onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                          <i class="fas fa-plus"></i>
-                        </button>
-                      </div>
-                      <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                        <h6 class="mb-0">€ 44.00</h6>
-                      </div>
-                      <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                        <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
-                      </div>
+                    <div class="col-md-3 col-lg-3 col-xl-3">
+                      <h6 class="text-muted">
+                        {% if item.online_course %}
+                          {{ item.online_course.title }}
+                        {% elif item.in_person_course %}
+                          {{ item.in_person_course.title }}
+                        {% elif item.pamphlets %}
+                          {{ item.pamphlets.title }}
+                        {% endif %}
+                      </h6>
                     </div>
-  
-                    <hr class="my-4">
-  
-                    <div class="row mb-4 d-flex justify-content-between align-items-center">
-                      <div class="col-md-2 col-lg-2 col-xl-2">
-                        <img
-                          src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img6.webp"
-                          class="img-fluid rounded-3" alt="Cotton T-shirt">
-                      </div>
-                      <div class="col-md-3 col-lg-3 col-xl-3">
-                        <h6 class="text-muted">Shirt</h6>
-                        <h6 class="mb-0">Cotton T-shirt</h6>
-                      </div>
-                      <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
-                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
-                          onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                          <i class="fas fa-minus"></i>
-                        </button>
-  
-                        <input id="form1" min="0" name="quantity" value="1" type="number"
-                          class="form-control form-control-sm" />
-  
-                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
-                          onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                          <i class="fas fa-plus"></i>
-                        </button>
-                      </div>
-                      <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                        <h6 class="mb-0">€ 44.00</h6>
-                      </div>
-                      <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                        <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
-                      </div>
+                    <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                      <button class="btn btn-link px-2" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                        <i class="fas fa-minus"></i>
+                      </button>
+
+                      <input id="form1" name="quantity" value="{{ item.quantity }}" type="number" class="form-control form-control-sm" readonly />
+
+                      <button class="btn btn-link px-2" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                        <i class="fas fa-plus"></i>
+                      </button>
                     </div>
-  
-                    <hr class="my-4">
-  
-                    <div class="row mb-4 d-flex justify-content-between align-items-center">
-                      <div class="col-md-2 col-lg-2 col-xl-2">
-                        <img
-                          src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img7.webp"
-                          class="img-fluid rounded-3" alt="Cotton T-shirt">
-                      </div>
-                      <div class="col-md-3 col-lg-3 col-xl-3">
-                        <h6 class="text-muted">Shirt</h6>
-                        <h6 class="mb-0">Cotton T-shirt</h6>
-                      </div>
-                      <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
-                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
-                          onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                          <i class="fas fa-minus"></i>
-                        </button>
-  
-                        <input id="form1" min="0" name="quantity" value="1" type="number"
-                          class="form-control form-control-sm" />
-  
-                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
-                          onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                          <i class="fas fa-plus"></i>
-                        </button>
-                      </div>
-                      <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                        <h6 class="mb-0">€ 44.00</h6>
-                      </div>
-                      <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                        <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
-                      </div>
+                    <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                      <h6 class="mb-0">{{ item.price }} تومان</h6>
                     </div>
-  
-                    <hr class="my-4">
-  
-                    <div class="pt-5">
-                      <h6 class="mb-0"><a href="#!" class="text-body"><i
-                            class="fas fa-long-arrow-alt-left me-2"></i>Back to shop</a></h6>
+                    <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                      <a style="text-decoration: none;" href="{% url 'E_commerce:remove_from_cart' item.id %}">
+                        <button type="button" class="close-btn">
+                          &times;
+                        </button>
+                      </a>
+                      <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
                     </div>
+                  </div>
+                  <hr class="my-4">
+                  {% endfor %}
+
+                  <div class="pt-5">
+                    <a href="{% url 'E_commerce:list_course' %}" class="btn btn-warning">برگشت به صفحه دوره ها</a>
                   </div>
                 </div>
-                <div class="col-lg-4 bg-body-tertiary">
-                  <div class="p-5">
-                    <h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
-                    <hr class="my-4">
-  
-                    <div class="d-flex justify-content-between mb-4">
-                      <h5 class="text-uppercase">items 3</h5>
-                      <h5>€ 132.00</h5>
-                    </div>
-  
-                    <h5 class="text-uppercase mb-3">Shipping</h5>
-  
-                    <div class="mb-4 pb-2">
-                      <select data-mdb-select-init>
-                        <option value="1">Standard-Delivery- €5.00</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                        <option value="4">Four</option>
-                      </select>
-                    </div>
-  
-                    <h5 class="text-uppercase mb-3">Give code</h5>
-  
-                    <div class="mb-5">
-                      <div data-mdb-input-init class="form-outline">
-                        <input type="text" id="form3Examplea2" class="form-control form-control-lg" />
-                        <label class="form-label" for="form3Examplea2">Enter your code</label>
-                      </div>
-                    </div>
-  
-                    <hr class="my-4">
-  
-                    <div class="d-flex justify-content-between mb-5">
-                      <h5 class="text-uppercase">Total price</h5>
-                      <h5>€ 137.00</h5>
-                    </div>
-  
-                    <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-dark btn-block btn-lg"
-                      data-mdb-ripple-color="dark">Register</button>
-  
+              </div>
+              <div class="col-lg-4 bg-body-tertiary">
+                <div class="p-5">
+                  <h3 class="fw-bold mb-5 mt-2 pt-1">جمع بندی</h3>
+                  <hr class="my-4">
+
+                  <div class="d-flex justify-content-between mb-4">
+                    <h5 class="text-uppercase">تعداد محصول :</h5>
+                    <h5>{{ order.items.count }}</h5>
                   </div>
+
+                  <hr class="my-4">
+
+                  <div class="d-flex justify-content-between mb-5">
+                    <h5 class="text-uppercase">جمع مبلغ :</h5>
+                    <h5>{{ order.total_amount }} تومان</h5>
+                  </div>
+
+                  <a href="{% url 'E_commerce:go_to_gateway' %}">
+                    <button type="button" class="btn btn-success btn-block btn-lg">پرداخت</button>
+                  </a>
                 </div>
               </div>
             </div>
@@ -174,6 +102,8 @@
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
 
 {% endblock %}

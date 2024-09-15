@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'django.contrib.humanize',
+
     "rest_framework",
     "azbankgateways",
     "widget_tweaks",
@@ -182,34 +184,46 @@ SITE_ID = 1
 
 AZ_IRANIAN_BANK_GATEWAYS = {
     "GATEWAYS": {
-        "BMI": {
+        # "BMI": {
+        #     "MERCHANT_CODE": "<YOUR MERCHANT CODE>",
+        #     "TERMINAL_CODE": "<YOUR TERMINAL CODE>",
+        #     "SECRET_KEY": "<YOUR SECRET CODE>",
+        # },
+        # "SEP": {
+        #     "MERCHANT_CODE": "<YOUR MERCHANT CODE>",
+        #     "TERMINAL_CODE": "<YOUR TERMINAL CODE>",
+        # },
+        "IDPAY": {
             "MERCHANT_CODE": "<YOUR MERCHANT CODE>",
-            "TERMINAL_CODE": "<YOUR TERMINAL CODE>",
-            "SECRET_KEY": "<YOUR SECRET CODE>",
-        },
-        "SEP": {
-            "MERCHANT_CODE": "<YOUR MERCHANT CODE>",
-            "TERMINAL_CODE": "<YOUR TERMINAL CODE>",
+            "METHOD": "POST",  # GET or POST
+            "X_SANDBOX": 1,  # 0 disable, 1 active
         },
     },
     "IS_SAMPLE_FORM_ENABLE": True,  # اختیاری و پیش فرض غیر فعال است
-    "DEFAULT": "BMI",
+    "DEFAULT": "IDPAY",
     "CURRENCY": "IRR",  # اختیاری
     "TRACKING_CODE_QUERY_PARAM": "tc",  # اختیاری
     "TRACKING_CODE_LENGTH": 16,  # اختیاری
     "SETTING_VALUE_READER_CLASS": "azbankgateways.readers.DefaultReader",  # اختیاری
     "BANK_PRIORITIES": [
-        "BMI",
-        "SEP",
-        # and so on ...
+        # "BMI",
+        # "SEP",
+        # # and so on ...
     ],  # اختیاری
     "IS_SAFE_GET_GATEWAY_PAYMENT": False,  # اختیاری، بهتر است True بزارید.
     "CUSTOM_APP": None,  # اختیاری
 }
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 USE_X_FORWARDED_HOST = True
 
 # SECURE_SSL_REDIRECT = True
 
+AUTH_USER_MODEL = "account.Profile"
 
+USE_L10N = True
+
+
+
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

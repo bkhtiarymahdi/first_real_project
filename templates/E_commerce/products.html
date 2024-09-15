@@ -1,0 +1,52 @@
+{% extends "blog/base.html" %}
+{% load humanize %}
+{% load base_tags %}
+{% block content %}
+    <!-- Blog preview section-->
+    <section class="py-5">
+        <div class="container px-5 my-5">
+            <div class="row gx-5 justify-content-center">
+                <div class="col-lg-8 col-xl-6">
+                    <div class="text-center">
+                        <h2 class="fw-bolder" id="header_note">محصولات</h2>
+                    </div>
+                </div>
+            </div>
+            <hr style="color: white;">
+
+            <!-- لیست محصولات -->
+            <div class="row">
+                {% for product in products %}
+                <div class="col-12 col-md-6 mb-4">  <!-- کارت برای نمایش محصولات -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="tag_title">{{ product.title }}<b>:</b></h4>
+                            <p class="tag_description_ww">{{ product.description|truncatewords:14|safe }}</p>
+                            <div class="time_create_ww">{{ product.create|naturaltime }}</div>
+
+                            {% if product|isinstance_of:"InPersonCourse" %}
+                                <a href="{% url 'E_commerce:detail_products' 'inpersoncourse' product.id %}" class="btn btn-success mt-2">مشاهده جزئیات</a>
+                            {% elif product|isinstance_of:"OnlineCourse" %}
+                                <a href="{% url 'E_commerce:detail_products' 'onlinecourse' product.id %}" class="btn btn-success mt-2">مشاهده جزئیات</a>
+                            {% elif product|isinstance_of:"Pamphlets" %}
+                                <a href="{% url 'E_commerce:detail_products' 'pamphlets' product.id %}" class="btn btn-success mt-2">مشاهده جزئیات</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <hr style="color: white;">
+            <div class="pagination">
+                <ul class="pagination">
+                    {% for page in page_obj.paginator.page_range %}
+                    <li class="page-item {% if page == page_obj.number %}active{% endif %}">
+                        <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </section>
+{% endblock %}

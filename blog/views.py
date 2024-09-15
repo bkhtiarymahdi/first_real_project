@@ -19,6 +19,7 @@ from common.models import (
     ShortSound,
     OnlineCourse,
     InPersonCourse,
+    Pamphlets,
 )
 
 
@@ -35,9 +36,35 @@ def letter_alphabet(request):
 
 # search by alphabet
 def filter_alphabet(request, letter):
-    list_book = Book.objects.filter(name__startswith=letter)
-    context = {"books": list_book, "letter": letter}
-    return render(request, "blog/list_result_alphabet.html", context)
+    books = Book.objects.filter(title__startswith=letter)
+    articles = Article.objects.filter(title__startswith=letter)
+    biographies = Biography.objects.filter(title__startswith=letter)
+    voices = Voice.objects.filter(title__startswith=letter)
+    movies = Movie.objects.filter(title__startswith=letter)
+    shortsounds = ShortSound.objects.filter(title__startswith=letter)
+    pamphlets = Pamphlets.objects.filter(title__startswith=letter)
+    online_courses = OnlineCourse.objects.filter(title__startswith=letter)
+    in_person_courses = InPersonCourse.objects.filter(title__startswith=letter)
+
+    results = {
+        "book": books,
+        "article": articles,
+        "biography": biographies,
+        "voice": voices,
+        "movie": movies,
+        "shortsound": shortsounds,
+        "pamphlets": pamphlets,
+        "onlinecourse": online_courses,
+        "inpersoncourse": in_person_courses,
+    }
+
+    filtered_results = {key: value for key, value in results.items() if value.exists()}
+
+    return render(
+        request,
+        "blog/list_result_alphabet.html",
+        {"results": filtered_results, "letter": letter},
+    )
 
 
 def view_tag(request, data):
@@ -87,25 +114,27 @@ class HomeList(ListView):
         context["special_books"] = Book.objects.filter(special=True).order_by(
             "-create"
         )[:5]
-        context["last_note_article"] = Article.objects.order_by("-create")[:3]
-        context["last_note_book"] = Book.objects.order_by("-create")[:3]
+        article = Article.objects.order_by("-create")[:3]
+        book = Book.objects.order_by("-create")[:3]
+        combined = sorted(chain(article, book), key=lambda x: x.create, reverse=True)
+        context["last_note"] = combined
 
         return context
 
 
 class SearchList(ListView):
     template_name = "blog/search_list.html"
-    paginate_by = 6
+    paginate_by = 16
 
     def get_queryset(self):
         query_search = self.request.GET.get("query")
         return Book.objects.filter(
-            Q(description__icontains=query_search) | Q(name__icontains=query_search)
+            Q(description__icontains=query_search) | Q(title__icontains=query_search)
         )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["querys"] = self.request.GET.get("query")
+        context["query_search"] = self.request.GET.get("query")
         return context
 
 
@@ -263,9 +292,8 @@ class MultiMediaList(ListView):
         movie = Movie.objects.all().order_by("-create")
         voice = Voice.objects.all().order_by("-create")
         shortsound = ShortSound.objects.all().order_by("-create")
-        quoteimage = QuoteImage.objects.all().order_by("-create")
         combined = sorted(
-            chain(movie, voice, shortsound, quoteimage),
+            chain(movie, voice, shortsound),
             key=lambda x: x.create,
             reverse=True,
         )

@@ -60,3 +60,12 @@ body {
 .swiper-button-prev {
     color: #000;
 }
+
+@media (min-width: 992px) {
+    .slider_box {
+      height: 600px; 
+      overflow-y: auto; 
+    }
+  
+  }
+  

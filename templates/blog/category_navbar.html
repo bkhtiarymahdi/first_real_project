@@ -1,7 +1,9 @@
  <nav class="row navbar-expand-lg navbar-custom">
     <div class="container px-5">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span> دسته بندی 
+    </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav">
           <li class="nav-item nab_margin">
             <a class="set_nav nav-link fa-solid--home" style="margin-top: 15px;" href="{% url 'blog:home' %}"></a>
@@ -20,9 +22,18 @@
               </li>
             {% endif %}
           {% endfor %}
-          <li class="nav-item nab_margin">
-            <a class="set_nav nav-link" href="{% url 'account:login' %}">ثبت نام/ ورود</a>
-          </li>
+          {% if user.is_authenticated %}
+            <li class="nav-item nab_margin">
+              <!-- <span class="material-symbols-light--shopping-cart-outline"></span> -->
+              <a class="set_nav nav-link" href="{% url 'E_commerce:view_cart' %}">
+                <span class="bi p-4 bi bi-cart3 text-light cart-icon"></span>
+              </a>
+            </li>
+          {% else %}
+            <li class="nav-item nab_margin">
+              <a class="set_nav nav-link" href="{% url 'account:login' %}">ثبت نام/ ورود</a>
+            </li>
+          {% endif %}
         </ul>
         <!-- Search form -->
         <div class="">

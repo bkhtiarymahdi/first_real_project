@@ -1,108 +1,47 @@
 {% extends "blog/base.html" %}
-<!-- {% load static %} -->
-{% block content %} 
-            
-            <!-- Blog preview section-->
-            <section class="py-5">
-                <div class="container px-5 my-5">
-                    <div class="row gx-5 justify-content-center">
-                        <div class="col-lg-8 col-xl-6">
-                            <div class="text-center">
-                                <h2 class="fw-bolder" id="header_note">کلیپ ها</h2>
-                            </div>
-                        </div>
-                    </div><hr style="color: white;">
-                    <!-- div container -->
-                    {% for writtenwork in writtenworks %}
-                    {% comment %} <a href="{% url 'blog:detail' writtenwork.id %}" style="text-decoration: none;"> {% endcomment %}
-                     <div class="row boxes">
-                        <div class="d-flex box_movie">
-                                <h4 class="tag_title">{{ writtenwork.title }}<b>:</b></h4>
-                                <p class="tag_description_ww">{{ writtenwork.description|truncatewords:15|safe }}</p>
-                            <div class="time_create_ww">{{writtenwork.publish}}</div>
-                        </div>
-                    </div>
-                    </a>
-                     {% endfor %}
-                    <hr style="color: white;">
-                    <div class="pagination">
-                        <ul class="pagination">
-                            {% for page in page_obj.paginator.page_range %}
-                            <li class="page-item {% if page == page_obj.number %}active{% endif %}">
-                                <a class="page-link" href="?page={{ page }}">{{ page }}</a>
-                            </li>
-                            {% endfor %}
-                        </ul>
+{% load humanize %}
+{% load base_tags %}
+{% block content %}
+    <section class="py-5">
+        <div class="container px-5 my-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-xl-6 text-center">
+                    <h2 class="fw-bolder" id="header_note">مکتوبات</h2>
+                </div>
+            </div>
+
+            <!-- لیست محصولات -->
+            {% for writtenwork in writtenworks %}
+            <div class="row boxes mt-4">
+                <div class="d-flex flex-column flex-md-row box_movie align-items-start">
+                    <h4 class="tag_title">{{ writtenwork.title }}<b>:</b></h4>
+                    <p class="tag_description_ww ms-md-3">{{ writtenwork.description|truncatewords:14|safe }}</p>
+                    <div class="time_create_ww ms-md-3">{{ writtenwork.create|naturaltime }}</div>
+
+                    <!-- لینک به دیتیل محصول -->
+                    <div class="ms-md-3 mt-2 mt-md-0">
+                        {% if writtenwork|isinstance_of:"article" %}
+                            <a href="{% url 'blog:content_detail' 'article' writtenwork.id %}" class="btn btn-success">مشاهده جزئیات</a>
+                        {% elif writtenwork|isinstance_of:"book" %}
+                            <a href="{% url 'blog:content_detail' 'book' writtenwork.id %}" class="btn btn-success">مشاهده جزئیات</a>
+                        {% elif writtenwork|isinstance_of:"biography" %}
+                            <a href="{% url 'blog:content_detail' 'biography' writtenwork.id %}" class="btn btn-success">مشاهده جزئیات</a>
+                        {% endif %}
                     </div>
                 </div>
-            </section>
-        </main>
+            </div>
+            {% endfor %}
+
+            <!-- حذف خط جداکننده -->
+            <div class="pagination mt-5">
+                <ul class="pagination">
+                    {% for page in page_obj.paginator.page_range %}
+                    <li class="page-item {% if page == page_obj.number %}active{% endif %}">
+                        <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </section>
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- <div class="container"> -->
-    <!-- <div class="row gx-5"> -->
-        <!-- {% for movie in movies %} -->
-            <!-- <div class="col-lg-4 mb-5" id="box_movie"> -->
-                 <!-- <div class="card h-100 shadow border-0"> -->
-                    <!-- <img class="card-img-top img-fluid custom-imgs" src="{% static 'blog/logo_film.webp' %}" alt="..." /> -->
-                    <!-- <div class="card-body p-4"> -->
-                        <!-- <a class="text-decoration-none link-dark stretched-link" href="{{ movie.film }}"> -->
-                            <!-- <h5 class="card-title mb-3">{{ movie.title }}</h5> -->
-                        <!-- </a> -->
-                        <!-- <p class="card-text mb-0">{{ movie.description|truncatewords:30|safe }}</p> -->
-                    <!-- </div> -->
-                    <!-- <div class="card-footer p-4 pt-0 bg-transparent border-top-0"> -->
-                        <!-- <div class="d-flex align-items-end justify-content-between"> -->
-                            <!-- <div class="d-flex align-items-center"> -->
-                                <!-- <div class="small"> -->
-                                    <!-- <div class="text-muted">تاریخ انتشار : {{ book.publish }}</div> -->
-                                <!-- </div> -->
-                            <!-- </div> -->
-                        <!-- </div> -->
-                    <!-- </div> -->
-                <!-- </div> -->
-            <!-- </div> -->
-            <!-- {% if forloop.counter|divisibleby:3 and not forloop.last %} -->
-                <!-- </div><div class="row gx-5"> -->
-            <!-- {% endif %} -->
-        <!-- {% endfor %} -->
-    <!-- </div> -->
-    <!-- <div class="pagination"> -->
-        <!-- <a href="#">&laquo;</a> -->
-        <!-- <a href="#">1</a> -->
-        <!-- <a class="active" href="#">2</a> -->
-        <!-- <a href="#">3</a> -->
-        <!-- <a href="#">4</a> -->
-        <!-- <a href="#">5</a> -->
-        <!-- <a href="#">6</a> -->
-        <!-- <a href="#">&raquo;</a> -->
-    <!-- </div> -->
-<!-- </div> -->
