@@ -23,14 +23,12 @@
                     <hr class="my-3">
                     <p class="paragraph lead text-muted">{{ object.description }}</p>
                 </div>
-        
-                <!-- برچسب‌ها -->
-                <div class="mt-3">
-                    <span class="badge bg-secondary fs-5">برچسب‌ها: </span>
-                    {% for tag in object.tag.all %}
-                        <span class="badge bg-secondary fs-5">{{ tag.name }}</span>{% if not forloop.last %}, {% endif %}
-                    {% endfor %}
-                </div>
+                    <h6>
+                        برچسب ها:
+                        {% for tag in object.tag.all %}
+                        <a class="text-warning" style="text-decoration: none;" href="{% url 'blog:tag_search' %}?tag={{ tag.name }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </h6>
             </div>
         </div>        
         {% elif type == 'onlinecourse' %}
@@ -54,7 +52,7 @@
                 <span class="btn btn-secondary">
                     برچسب‌ها:
                     {% for tag in object.tag.all %}
-                        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                        <a class="text-warning" style="text-decoration: none;" href="{% url 'blog:tag_search' %}?tag={{ tag.name }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 </span>
             </div>
@@ -82,7 +80,7 @@
                 <span class="btn btn-secondary">
                     برچسب‌ها:
                     {% for tag in object.tag.all %}
-                        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                        <a class="text-warning" style="text-decoration: none;" href="{% url 'blog:tag_search' %}?tag={{ tag.name }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 </span>
             </div>
@@ -105,13 +103,17 @@
                     <h2 style="font-size: 1.5em;" class="title display-5 fw-bold text-primary">{{ object.title }}</h2>
                     <hr class="my-3">
                     <p class="paragraph lead text-muted">{{ object.description|truncatewords:30 }}</p>
-                    <a href="{% url 'E_commerce:add_to_cart' 'inpersoncourse' object.id %}" class="d-flex justify-content-center btn btn-primary">اضافه کردن به سبد خرید</a>
-                </div>
+                    {% if object.capacity == 0 %}
+                        <p class="d-flex justify-content-center btn btn-danger">ظرفیت دوره به اتمام رسیده است</p>
+                    {% else %}
+                        <a href="{% url 'E_commerce:add_to_cart' 'inpersoncourse' object.id %}" class="d-flex justify-content-center btn btn-primary">اضافه کردن به سبد خرید</a>
+                    {% endif %}
+                    </div>
         
                 <div class="mt-3">
                     <span class="badge bg-secondary fs-5">برچسب‌ها: </span>
                     {% for tag in object.tag.all %}
-                        <span class="badge bg-secondary fs-5">{{ tag.name }}</span>{% if not forloop.last %}, {% endif %}
+                        <a class="text-warning" style="text-decoration: none;" href="{% url 'blog:tag_search' %}?tag={{ tag.name }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 </div>
             </div>
@@ -128,7 +130,7 @@
                 <span class="btn btn-secondary">
                     برچسب‌ها:
                     {% for tag in object.tag.all %}
-                        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                        <a class="text-warning" style="text-decoration: none;" href="{% url 'blog:tag_search' %}?tag={{ tag.name }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 </span>
             </div>
@@ -151,7 +153,7 @@
                 <span class="btn btn-secondary">
                     برچسب‌ها:
                     {% for tag in object.tag.all %}
-                        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                        <a class="text-warning" style="text-decoration: none;" href="{% url 'blog:tag_search' %}?tag={{ tag.name }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 </span>
             </div>

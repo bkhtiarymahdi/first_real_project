@@ -1,11 +1,15 @@
 from typing import Any
+from django.apps import apps
 from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView
-from django.db.models import Q
-from django.core.paginator import Paginator
+from django.db.models import Q, Count
+from django.core.paginator import Paginator, Page
+from django.utils.text import slugify
 
+import re
 from itertools import chain
+from taggit.models import Tag
 from common.choices import persian_alphabet
 from common.models import (
     Article,
@@ -36,29 +40,23 @@ def letter_alphabet(request):
 
 # search by alphabet
 def filter_alphabet(request, letter):
-    books = Book.objects.filter(title__startswith=letter)
-    articles = Article.objects.filter(title__startswith=letter)
-    biographies = Biography.objects.filter(title__startswith=letter)
-    voices = Voice.objects.filter(title__startswith=letter)
-    movies = Movie.objects.filter(title__startswith=letter)
-    shortsounds = ShortSound.objects.filter(title__startswith=letter)
-    pamphlets = Pamphlets.objects.filter(title__startswith=letter)
-    online_courses = OnlineCourse.objects.filter(title__startswith=letter)
-    in_person_courses = InPersonCourse.objects.filter(title__startswith=letter)
+    models = [
+        ("book", Book),
+        ("article", Article),
+        ("biography", Biography),
+        ("voice", Voice),
+        ("movie", Movie),
+        ("shortsound", ShortSound),
+        ("pamphlets", Pamphlets),
+        ("onlinecourse", OnlineCourse),
+        ("inpersoncourse", InPersonCourse),
+    ]
 
-    results = {
-        "book": books,
-        "article": articles,
-        "biography": biographies,
-        "voice": voices,
-        "movie": movies,
-        "shortsound": shortsounds,
-        "pamphlets": pamphlets,
-        "onlinecourse": online_courses,
-        "inpersoncourse": in_person_courses,
+    filtered_results = {
+        model_name: model.objects.filter(title__startswith=letter)
+        for model_name, model in models
+        if model.objects.filter(title__startswith=letter).exists()
     }
-
-    filtered_results = {key: value for key, value in results.items() if value.exists()}
 
     return render(
         request,
@@ -74,28 +72,19 @@ def view_tag(request, data):
 
 
 class FinalNote(ListView):
-    queryset = Book.objects.all().order_by("-create")
     template_name = "blog/final_note.html"
-    context_object_name = "final_book"
-    paginate_by = 6
+    context_object_name = "final_note"
+    paginate_by = 12
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_queryset(self):
         article = Article.objects.all().order_by("-create")
-        paginator = Paginator(article, 6)
-        page_num = self.request.GET.get("page")
-        second_part = paginator.get_page(page_num)
-        context["final_article"] = second_part
-        return context
-
-
-# def final_note(request):
-#     book = Book.objects.all().order_by("-create")
-#     article = Article.objects.all().order_by("-create")
-
-#     context = {"final_book": book, "final_article": article}
-
-#     return render(request, "blog/final_note.html", context)
+        book = Book.objects.all().order_by("-create")
+        biography = Biography.objects.all().order_by("-create")
+        combined = sorted(
+            chain(article, book, biography),
+            key=lambda x: x.create,
+        )
+        return combined
 
 
 class HomeList(ListView):
@@ -105,36 +94,67 @@ class HomeList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        models = [Article, Book, Biography, Pamphlets, OnlineCourse, InPersonCourse]
+
+        special_items = sorted(
+            chain(*[model.objects.filter(special=True) for model in models]),
+            key=lambda x: x.create,
+            reverse=True,
+        )[:5]
+
+        context["special_items"] = special_items
+
+        context["top_tags"] = Tag.objects.annotate(
+            num_times_used=Count("taggit_taggeditem_items")
+        ).order_by("-num_times_used")[:10]
         context["header_title"] = Title.objects.order_by("-create")[:1]
-        context["all_note_article"] = Article.objects.all()[:3]
-        context["all_note_book"] = Book.objects.all()[:3]
-        context["special_article"] = Article.objects.filter(special=True).order_by(
-            "-create"
-        )[:5]
-        context["special_books"] = Book.objects.filter(special=True).order_by(
-            "-create"
-        )[:5]
-        article = Article.objects.order_by("-create")[:3]
-        book = Book.objects.order_by("-create")[:3]
-        combined = sorted(chain(article, book), key=lambda x: x.create, reverse=True)
-        context["last_note"] = combined
+        context["all_note_article"] = Article.objects.order_by("-create")[:3]
+        context["all_note_book"] = Book.objects.order_by("-create")[:3]
+
+        last_notes = sorted(
+            chain(
+                Article.objects.order_by("-create")[:3],
+                Book.objects.order_by("-create")[:3],
+            ),
+            key=lambda x: x.create,
+            reverse=True,
+        )
+        context["last_note"] = last_notes
 
         return context
 
 
 class SearchList(ListView):
     template_name = "blog/search_list.html"
-    paginate_by = 16
 
     def get_queryset(self):
-        query_search = self.request.GET.get("query")
-        return Book.objects.filter(
-            Q(description__icontains=query_search) | Q(title__icontains=query_search)
-        )
+        return None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["query_search"] = self.request.GET.get("query")
+        query_search = self.request.GET.get("query")
+
+        models = [
+            Book,
+            Article,
+            Biography,
+            Voice,
+            Movie,
+            ShortSound,
+            Pamphlets,
+            OnlineCourse,
+            InPersonCourse,
+        ]
+
+        search_results = []
+
+        for model in models:
+            results = model.objects.filter(Q(title__icontains=query_search))
+            search_results.extend(results)
+
+        context["search_results"] = search_results
+        context["query_search"] = query_search
         return context
 
 
@@ -149,36 +169,22 @@ class ContentDetailView(DetailView):
     template_name = "blog/detail.html"
 
     def get_object(self):
-        model_type = self.kwargs.get("model_type")
+        type = self.kwargs.get("type")
         pk = self.kwargs.get("pk")
 
-        if model_type == "article":
+        if type == "article":
             return get_object_or_404(Article, pk=pk)
-        elif model_type == "book":
+        elif type == "book":
             return get_object_or_404(Book, pk=pk)
-        elif model_type == "biography":
+        elif type == "biography":
             return get_object_or_404(Biography, pk=pk)
         else:
             return None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["model_type"] = self.kwargs.get("model_type")
+        context["type"] = self.kwargs.get("type")
         return context
-
-
-# class TowModelsDetail(DetailView):
-#     template_name = "blog/detail.html"
-#     context_object_name = "articles"
-
-#     def get_object(self):
-#         global get_id
-#         get_id = self.kwargs.get("id")
-#         return get_object_or_404(Article, id=get_id)
-
-# def get_context_data(self, **kwargs):
-#     context = super().get_context_data(**kwargs)
-#     context["books"] = get_object_or_404(Book, id=get_id)
 
 
 class BookList(ListView):
@@ -186,15 +192,6 @@ class BookList(ListView):
     template_name = "blog/book.html"
     context_object_name = "books"
     paginate_by = 6
-
-
-# class BookDetail(DetailView):
-#     template_name = "blog/detail.html"
-#     context_object_name = "details"
-
-#     def get_object(self):
-#         get_id = self.kwargs.get("id")
-#         return get_object_or_404(Article, id=get_id)
 
 
 class BiographyList(ListView):
@@ -247,20 +244,18 @@ class InPersonCourseList(ListView):
 
 
 class WrittenWorks(ListView):
-    queryset = Article.objects.all().order_by("-create")
     template_name = "blog/writtenworks.html"
+    context_object_name = "writtenworks"
     paginate_by = 15
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_queryset(self):
         article = Article.objects.all().order_by("-create")
         books = Book.objects.all().order_by("-create")
         biographys = Biography.objects.all().order_by("-create")
         combined = sorted(
             chain(books, biographys, article), key=lambda x: x.create, reverse=True
         )
-        context["writtenworks"] = combined
-        return context
+        return combined
 
 
 def detail_view(request, type, pk):
@@ -301,15 +296,31 @@ class MultiMediaList(ListView):
         return context
 
 
-# class Letter(ListView):
+def tag_search(request):
+    query = request.GET.get("tag")
+    results = []
 
-#     def get_queryset(self):
-#         query = self.request.GET.get("letter")
-#         for letter in persian_alphabet:
-#             if query == letter:
-#                 return Book.objects.filter(name__istartswith=letter)
+    if query:
+        model_names = [
+            "Book",
+            "Article",
+            "Biography",
+            "Voice",
+            "Movie",
+            "ShortSound",
+            "Pamphlets",
+            "OnlineCourse",
+            "InPersonCourse",
+        ]
 
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context["letters"] = self.request.GET.get("letter")
-#         return context
+        for model_name in model_names:
+            model = apps.get_model("common", model_name)
+            filtered_objects = model.objects.filter(tag__name=query)
+            if filtered_objects.exists():
+                results.extend(filtered_objects)
+
+    context = {
+        "results": results,
+        "query": query,
+    }
+    return render(request, "blog/tag_filter_results.html", context)

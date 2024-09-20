@@ -1,7 +1,7 @@
 {% extends "blog/base.html" %}
 {% load humanize %}
+{% load base_tags %}
 {% block search %}
-<!-- بخش پیش‌نمایش جستجو -->
 <section class="py-5">
     <div class="container px-5 my-5">
         <div class="row gx-5 justify-content-center">
@@ -13,26 +13,19 @@
         </div>
         <div class="container">
             <div class="row gx-5">
-                {% for book in object_list %}
+                {% for result in search_results %}
                     <div class="col-lg-4 mb-5">
                         <div class="card h-100 shadow border-0">
                             <div class="card-body p-4">
-                                <a class="text-decoration-none link-dark stretched-link" href="{% url 'blog:content_detail' model_type='book' pk=book.pk %}">
-                                    <h5 class="card-title mb-3">{{ book.title }}</h5>
-                                </a>
+                                {% with result|specify_url as dynamic_url %}
+                                    <a href="{% url dynamic_url type=result|get_model_type pk=result.pk %}" class="btn btn-primary mt-3">
+                                        <h5 class="card-title mb-3">{{ result.title }}</h5>
+                                    </a>
+                                {% endwith %}
                             </div>
                         </div>
                     </div>
                 {% endfor %}
-                <div class="pagination">
-                    <ul class="pagination">
-                        {% for page in page_obj.paginator.page_range %}
-                        <li class="page-item {% if page == page_obj.number %}active{% endif %}">
-                            <a class="page-link" href="?page={{ page }}">{{ page }}</a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
             </div>
         </div>
     </div>

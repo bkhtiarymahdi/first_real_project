@@ -25,10 +25,6 @@ class BaseModel(models.Model):
     def publish(self):
         return changes.converter_date_time(self.create)
 
-    # def elapsed_time(self):
-    #     time_now = time.time
-    #     return
-
     class Meta:
         abstract = True
 
@@ -108,16 +104,13 @@ class Article(BaseModel):
     class Meta:
         verbose_name_plural = "مقالات"
 
-    def price(self):
-        return price_amount(self.amount)
-
-    price.short_description = "قیمت"
-
     def __str__(self):
         return self.title
 
     def img_tag(self):
         return format_html("<img width=80 src='{}'>".format(self.img.url))
+
+    img_tag.short_description = "عکس"
 
 
 class Book(BaseModel):
@@ -141,11 +134,13 @@ class Book(BaseModel):
     class Meta:
         verbose_name_plural = "کتاب ها"
 
-    def __str__(self):
-        return self.name
+    # def __str__(self):
+    #     return self.title
 
     def img_tag(self):
-        return format_html("<img src='{}'>".format(self.img.url))
+        return format_html("<img width=80 src='{}'>".format(self.img.url))
+
+    img_tag.short_description = "عکس"
 
 
 class Biography(BaseModel):
@@ -165,7 +160,9 @@ class Biography(BaseModel):
         return self.title
 
     def img_tag(self):
-        return format_html("<img src='{}'>".format(self.img.url))
+        return format_html("<img width=80 src='{}'>".format(self.img.url))
+
+    img_tag.short_description = "عکس"
 
 
 class QuoteImage(BaseModel):
@@ -183,7 +180,9 @@ class QuoteImage(BaseModel):
         return f"{self.img}"
 
     def img_tag(self):
-        return format_html("<img src='{}'>".format(self.img.url))
+        return format_html("<img width=80 src='{}'>".format(self.img.url))
+
+    img_tag.short_description = "عکس"
 
 
 class Movie(BaseModel):
@@ -207,8 +206,14 @@ class Movie(BaseModel):
     def __str__(self):
         return self.title
 
-    def img_tag(self):
-        return format_html("<img src='{}'>".format(self.img.url))
+    def video_tag(self):
+        return format_html(
+            "<video width=150 height=150 class=mx-auto d-block mb-4 controls >  <source src='{}' type=audio/ogg>  </video>".format(
+                self.film.url
+            )
+        )
+
+    video_tag.short_description = "فیلم"
 
 
 class Voice(BaseModel):
@@ -235,8 +240,12 @@ class Voice(BaseModel):
     def __str__(self):
         return self.title
 
-    def img_tag(self):
-        return format_html("<img src='{}'>".format(self.img.url))
+    def pdf_tag(self):
+        return format_html(
+            "<a href='{}' class=btn btn-primary>PDF</a>".format(self.pdf.url)
+        )
+
+    pdf_tag.short_description = "فایل پی دی اف"
 
 
 class ShortSound(BaseModel):
@@ -273,8 +282,12 @@ class ShortSound(BaseModel):
     def __str__(self):
         return self.title
 
-    def img_tag(self):
-        return format_html("<img src='{}'>".format(self.img.url))
+    def pdf_tag(self):
+        return format_html(
+            "<a href='{}' class=btn btn-primary>PDF</a>".format(self.pdf.url)
+        )
+
+    pdf_tag.short_description = "فایل پی دی اف"
 
 
 class OnlineCourse(BaseModel):
@@ -285,7 +298,7 @@ class OnlineCourse(BaseModel):
     description = models.TextField(verbose_name="توضیحات")
     img = models.ImageField(upload_to="image", verbose_name="تصویر")
     special = models.BooleanField(default=False, verbose_name="آیا این دوره ویژه هست؟")
-    amount = models.DecimalField(max_digits=15, decimal_places=3, verbose_name="مبلغ")
+    amount = models.DecimalField(max_digits=15, decimal_places=0, verbose_name="مبلغ")
     word = models.FileField(
         upload_to="text",
         storage=None,
@@ -331,7 +344,9 @@ class OnlineCourse(BaseModel):
         verbose_name_plural = "دوره غیر حضوری"
 
     def img_tag(self):
-        return format_html("<img src='{}'>".format(self.img.url))
+        return format_html("<img width=80 src='{}'>".format(self.img.url))
+
+    img_tag.short_description = "عکس"
 
 
 class InPersonCourse(BaseModel):
@@ -345,20 +360,11 @@ class InPersonCourse(BaseModel):
     capacity = models.PositiveIntegerField(
         blank=True, null=True, default=1, verbose_name="ظرفیت"
     )
-    amount = models.DecimalField(max_digits=15, decimal_places=3, verbose_name="مبلغ")
+    amount = models.DecimalField(max_digits=15, decimal_places=0, verbose_name="مبلغ")
     list_of_registered_people = models.TextField(
         blank=True, null=True, verbose_name="اسامی افراد ثبت نام شده"
     )
-    # Registrants = models.PositiveIntegerField(default=0, verbose_name="تعداد شرکت کننده ها")
     tag = TaggableManager()
-
-    # def activate_for_user(self, user):
-    #     User_Access.objects.create(user=user, in_person_course=self)
-
-    # def is_pay(self):
-    #     print(self.user_accesses.all())
-    #     return self.user_accesses.all()
-    # print(InPersonCourse.)
 
     def activate_for_user(self, user):
         User_Access.objects.create(
@@ -379,7 +385,9 @@ class InPersonCourse(BaseModel):
         verbose_name_plural = "دوره حضوری"
 
     def img_tag(self):
-        return format_html("<img src='{}'>".format(self.img.url))
+        return format_html("<img width=80 src='{}'>".format(self.img.url))
+
+    img_tag.short_description = "عکس"
 
 
 class Pamphlets(BaseModel):
@@ -396,7 +404,7 @@ class Pamphlets(BaseModel):
     pdf = models.FileField(
         upload_to="text", storage=None, max_length=100, verbose_name="فایل پی دی اف"
     )
-    amount = models.DecimalField(max_digits=15, decimal_places=3, verbose_name="مبلغ")
+    amount = models.DecimalField(max_digits=15, decimal_places=0, verbose_name="مبلغ")
     tag = TaggableManager()
 
     def activate_for_user(self, user):
@@ -418,7 +426,9 @@ class Pamphlets(BaseModel):
         verbose_name_plural = "جزوات"
 
     def img_tag(self):
-        return format_html("<img src='{}'/>".format(self.img.url))
+        return format_html("<img width=80 src='{}'>".format(self.img.url))
+
+    img_tag.short_description = "عکس"
 
 
 class Order(BaseModel):

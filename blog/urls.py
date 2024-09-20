@@ -5,21 +5,22 @@ from .views import (
     BookList,
     VoiceList,
     MovieList,
-    ArticleList,
+    FinalNote,
     SearchList,
+    ArticleList,
+    WrittenWorks,
     BiographyList,
+    MultiMediaList,
     QuoteImageList,
     ShortSoundList,
     OnlineCourseList,
     ContentDetailView,
-    FinalNote,
-    WrittenWorks,
-    MultiMediaList,
+    view_tag,
+    tag_search,
     detail_view,
+    category_view,
     letter_alphabet,
     filter_alphabet,
-    category_view,
-    view_tag,
 )
 
 
@@ -37,7 +38,6 @@ urlpatterns = [
     path("view_tags/<int:data>/", view_tag, name="view_tags"),
     path("category/<slug:slug>/", category_view, name="category"),
     path("biography/", BiographyList.as_view(), name="biography"),
-    # path("search/<int:page>", SearchList.as_view(), name="search"),
     path("multimedia/", MultiMediaList.as_view(), name="multimedia"),
     path("quoteimages/", QuoteImageList.as_view(), name="quoteimages"),
     path("shortsounds/", ShortSoundList.as_view(), name="shortsounds"),
@@ -45,8 +45,9 @@ urlpatterns = [
     path("<str:type>/<int:pk>/", detail_view, name="detail_multimedia"),
     path("onlinecourses/", OnlineCourseList.as_view(), name="onlinecourses"),
     path("filter_alphabet/<str:letter>/", filter_alphabet, name="filter_alphabet"),
+    path("tag-search/", tag_search, name="tag_search"),
     path(
-        "<str:model_type>/<int:pk>/", ContentDetailView.as_view(), name="content_detail"
+        "detail/<str:type>/<int:pk>/", ContentDetailView.as_view(), name="content_detail"
     ),
 ]
 

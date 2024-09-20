@@ -1,88 +1,60 @@
 {% extends "blog/base.html" %}
 {% load humanize %}
-<!-- {% load static %} -->
-{% block content %} 
-            
-            <!-- Blog preview section-->
-            <section class="py-5">
-                <div class="container px-5 my-5">
-                    <div class="row gx-5 justify-content-center">
-                        <div class="col-lg-8 col-xl-6">
-                            <div class="text-center">
-                                <h2 class="fw-bolder" id="header_note">یاداشت ها</h2>
-                            </div>
-                        </div>
+{% load base_tags %}
+{% block content %}
+
+<section class="py-5">
+    <div class="container px-5 my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-6 text-center">
+                <h2 class="fw-bolder" id="header_note">یاداشت ها</h2>
+            </div>
+        </div>
+
+        <!-- Blog preview section -->
+        <div class="row gx-5 mt-4">
+            {% for note in final_note %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow border-0">
+                    <img class="card-img-top img-fluid custom-img" src="{{ note.img.url }}" alt="{{ note.title }}" />
+                    <div class="card-body p-4 d-flex flex-column">
+                        <a class="text-decoration-none link-dark stretched-link mb-3" href="{% url 'blog:content_detail' type=note|get_model_type pk=note.pk %}">
+                            <h5 class="card-title">{{ note.title }}</h5>
+                        </a>
+                        <p class="card-text text-muted">{{ note.description|truncatewords:25|safe }}</p>
                     </div>
-                    <div class="container">
-                        <div class="row gx-5">
-                            {% for book in final_book %}
-                                <div class="col-lg-4 mb-5">
-                                    <div class="card h-100 shadow border-0">
-                                        <img class="card-img-top img-fluid custom-img" src="{{ book.img.url }}" alt="..." />
-                                        <div class="card-body p-4">
-                                            <a class="text-decoration-none link-dark stretched-link" href="{% url 'blog:content_detail' model_type='book' pk=book.pk %}">
-                                                <h5 class="card-title mb-3">{{ book.title }}</h5>
-                                            </a>
-                                            <p class="card-text mb-0">{{ book.description|truncatewords:30|safe }}</p>
-                                        </div>
-                                        <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
-                                            <div class="d-flex align-items-end justify-content-between">
-                                                <div class="d-flex align-items-center">
-                                                    <!-- <div class="text-muted">{{ book.publish }} &middot; 6 min read</div> -->
-                                                    <div class="small">
-                                                        <div class="text-muted">تاریخ انتشار : {{ book.create|naturaltime }}</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-
-                            {% for article in final_article %}
-                                <div class="col-lg-4 mb-5">
-                                    <div class="card h-100 shadow border-0">
-                                        <img class="card-img-top img-fluid custom-img" src="{{ article.img.url }}" alt="..." />
-                                        <div class="card-body p-4">
-                                            <a class="text-decoration-none link-dark stretched-link" href="{% url 'blog:content_detail' model_type='article' pk=article.pk %}">
-                                                <h5 class="card-title mb-3">{{ article.title }}</h5>
-                                            </a>
-                                            <p class="card-text mb-0">{{ article.description|truncatewords:30|safe }}</p>
-                                        </div>
-                                        <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
-                                            <div class="d-flex align-items-end justify-content-between">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="small">
-                                                        <div class="text-muted">تاریخ انتشار : {{ article.create|naturaltime }}</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-
-                        <div class="pagination">
-                            <ul class="pagination">
-                                {% for page in page_obj.paginator.page_range %}
-                                <li class="page-item {% if page == page_obj.number %}active{% endif %}">
-                                    <a class="page-link" href="?page={{ page }}">{{ page }}</a>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+                    <div class="card-footer bg-transparent border-top-0 d-flex align-items-center justify-content-between">
+                        <div class="text-muted small">تاریخ انتشار: {{ note.create|naturaltime }}</div>
+                        <a href="{% url 'blog:content_detail' type=note|get_model_type pk=note.pk %}" class="btn btn-sm btn-outline-primary">مشاهده جزئیات</a>
                     </div>
                 </div>
-            </section>
-        </main>
-{% endblock %}
+            </div>
+            {% endfor %}
+        </div>
 
+        <!-- Pagination -->
+        <div class="pagination mt-5 justify-content-center">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">قبلی</a>
+                </li>
+                {% endif %}
 
-<body>
-    <div class="wrapper">
-        <div></div>
-        <div></div>
-        <div></div>
+                {% for page in page_obj.paginator.page_range %}
+                <li class="page-item {% if page == page_obj.number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                </li>
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">بعدی</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
     </div>
-</body>
+</section>
+
+{% endblock %}

@@ -38,12 +38,12 @@
   position: absolute;
   top: 100%;
   left: 0;
-  width: 100%; /* این باعث می‌شود که عرض زیرمجموعه‌ها به اندازه لینک والد باشد */
+  width: 100%; 
   background-color: #1f5274;
   display: none;
   z-index: 1000;
-  padding: 0; /* حذف پدینگ */
-  list-style-type: none; /* حذف نقطه‌های لیست */
+  padding: 0; 
+  list-style-type: none; 
 }
 
 .submenu li {

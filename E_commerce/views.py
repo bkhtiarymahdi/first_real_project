@@ -64,25 +64,6 @@ class ListProduct(ListView):
         return context
 
 
-# def detail_view_product(request, type, pk):
-#     if type == "inpersoncourse":
-#         obj = get_object_or_404(InPersonCourse, pk=pk)
-#     elif type == "onlinecourse":
-#         obj = get_object_or_404(OnlineCourse, pk=pk)
-#     elif type == "pamphlets":
-#         obj = get_object_or_404(Pamphlets, pk=pk)
-#     # else:
-#     #     return render(
-#     #         request, "404.html"
-#     #     )
-
-#     context = {
-#         "object": obj,
-#         "type": type,
-#     }
-#     return render(request, "E_commerce/detaile3model.html", context)
-
-
 def detail_view_product(request, type, pk):
     if type == "pamphlets":
         product = get_object_or_404(Pamphlets, id=pk)
@@ -233,16 +214,16 @@ def callback_gateway_view(request):
 
         order.is_paid = True
         order.save()
-        # ایجاد رکورد در User_Access برای هر محصول خریداری‌شده
+
         for item in order.items.all():
-            if isinstance == item.in_person_course:
-                InPersonCourse.capacity -= 1
-                InPersonCourse.list_of_registered_people += f"{request.user}\n"
-            #     item.product.activate_for_user(request.user)
-            # elif isinstance(item.online_course, OnlineCourse):
-            #     item.product.activate_for_user(request.user)
-            # elif isinstance(item.pamphlets, InPersonCourse):
-            #     item.product.activate_for_user(request.user)
+            if hasattr(item, "in_person_course") and item.in_person_course:
+                item.in_person_course.capacity -= 1
+                item.in_person_course.save()
+
+                item.in_person_course.list_of_registered_people += (
+                    f"{order.user.username}\n"
+                )
+                item.in_person_course.save()
 
         messages.success(request, "پرداخت با موفقیت انجام شد.")
     else:

@@ -3,7 +3,7 @@
 <!-- {% load static %} -->
 {% block content %}
     <section>
-        {% if model_type == 'article' %}
+        {% if type == 'article' %}
         <div class="row d-flex body_details">
                 <img class="custome_imageing" src="{{object.img.url}}" alt="">
             <div class="data_box col-lg-4">
@@ -11,14 +11,19 @@
                 <h6 class="tools_box">فایل پی دی اف :<a style="text-decoration: none;" href="{{object.pdf.url}}">دریافت فایل</a></h6>
                 <h6 class="tools_box">فایل وورد :<a style="text-decoration: none;" href="{{object.word.url}}">دریافت فایل</a></h6>
                 <h6 class="tools_box">تاریخ انتشار : {{object.create|naturaltime}}</h6>
-                <h6 class="tools_box">برچسب ها :<a style="text-decoration: none;" href="">{% for tag in object.tag.all %}, {{tag.name}}{% endfor %}</a></h6>
+                <h6 class="tools_box">
+                    برچسب ها:
+                    {% for tag in object.tag.all %}
+                        <a class="text-warning" style="text-decoration: none;" href="{% url 'blog:tag_search' %}?tag={{ tag.name }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </h6>
             </div>
         </div>
         <div class="box_paragraph">
             <h2 class="title">{{object.title}}</h2>
             <p class="paragraph">{{object.description}}</p>
         </div>
-        {% elif model_type == 'book' %}
+        {% elif type == 'book' %}
         <div class="row d-flex body_details">
                 <img class="custome_imageing" src="{{object.img.url}}" alt="">
             <div class="data_box col-lg-4">
@@ -26,14 +31,19 @@
                 <h6 class="tools_box">فایل پی دی اف :<a style="text-decoration: none;" href="{{object.pdf.url}}">دریافت فایل</a></h6>
                 <h6 class="tools_box">فایل وورد :<a style="text-decoration: none;" href="{{object.word.url}}">دریافت فایل</a></h6>
                 <h6 class="tools_box">تاریخ انتشار : {{object.create|naturaltime}}</h6>
-                <h6 class="tools_box">برچسب ها :<a style="text-decoration: none;" href="">{% for tag in object.tag.all %}, {{tag.name}}{% endfor %}</a></h6>
+                <h6 class="tools_box">
+                    برچسب ها:
+                    {% for tag in object.tag.all %}
+                        <a class="text-warning" style="text-decoration: none;" href="{% url 'blog:tag_search' %}?tag={{ tag.name }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </h6>
             </div>
         </div>
         <div class="box_paragraph">
             <h2 class="title">{{object.title}}</h2>
             <p class="paragraph">{{object.description}}</p>
         </div>
-        {% elif model_type == 'biography' %}
+        {% elif type == 'biography' %}
         <div class="row d-flex body_details">
                 <img class="custome_imageing" src="{{object.img.url}}" alt="">
             <div class="data_box col-lg-4">
@@ -41,8 +51,13 @@
                 <h6 class="tools_box">فایل پی دی اف :<a style="text-decoration: none;" href="{{object.pdf.url}}">دریافت فایل</a></h6>
                 <h6 class="tools_box">فایل وورد :<a style="text-decoration: none;" href="{{object.word.url}}">دریافت فایل</a></h6>
                 <h6 class="tools_box">تاریخ انتشار : {{object.create|naturaltime}}</h6>
-                <h6 class="tools_box">برچسب ها :<a style="text-decoration: none;" href="">{% for tag in object.tag.all %}, {{tag.name}}{% endfor %}</a></h6>
-            </div>
+                <h6 class="tools_box">
+                    برچسب ها:
+                    {% for tag in object.tag.all %}
+                        <a class="text-warning" style="text-decoration: none;" href="{% url 'blog:tag_search' %}?tag={{ tag.name }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </h6>          
+              </div>
         </div>
         <div class="box_paragraph">
             <h2 class="title">{{object.title}}</h2>

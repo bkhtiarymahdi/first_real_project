@@ -22,7 +22,7 @@
                 <span class="btn btn-secondary">
                     برچسب‌ها:
                     {% for tag in object.tag.all %}
-                        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                        <a class="text-warning" style="text-decoration: none;" href="{% url 'blog:tag_search' %}?tag={{ tag.name }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 </span>
             </div>
@@ -51,7 +51,7 @@
                 <span class="btn btn-secondary">
                     برچسب‌ها:
                     {% for tag in object.tag.all %}
-                        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                        <a class="text-warning" style="text-decoration: none;" href="{% url 'blog:tag_search' %}?tag={{ tag.name }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 </span>
             </div>
@@ -74,7 +74,7 @@
                 <span class="btn btn-secondary">
                     برچسب‌ها:
                     {% for tag in object.tag.all %}
-                        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                        <a class="text-warning" style="text-decoration: none;" href="{% url 'blog:tag_search' %}?tag={{ tag.name }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 </span>
             </div>

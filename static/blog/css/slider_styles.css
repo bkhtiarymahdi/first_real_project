@@ -63,7 +63,7 @@ body {
 
 @media (min-width: 992px) {
     .slider_box {
-      height: 600px; 
+      height: 610px; 
       overflow-y: auto; 
     }
   

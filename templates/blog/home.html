@@ -41,12 +41,12 @@
                     {% for note in last_note %}
                     <div class="latest-note">
                         {% if note|instanceof:'common.Article' %}
-                            <a href="{% url 'blog:content_detail' model_type='article' pk=note.pk %}">
+                            <a href="{% url 'blog:content_detail' type='article' pk=note.pk %}">
                                 <h5>{{ note.title }}</h5>
                                 <p>{{ note.description|truncatewords:10|safe }}</p>
                             </a>
                         {% elif note|instanceof:'common.Book' %}
-                            <a href="{% url 'blog:content_detail' model_type='book' pk=note.pk %}">
+                            <a href="{% url 'blog:content_detail' type='book' pk=note.pk %}">
                                 <h5>{{ note.title }}</h5>
                                 <p>{{ note.description|truncatewords:10|safe }}</p>
                             </a>
@@ -56,7 +56,7 @@
                     
                     {% for object in last_note_book %}
                     <div class="latest-note">
-                        <a href="{% url 'blog:content_detail' model_type='book' pk=object.pk %}">
+                        <a href="{% url 'blog:content_detail' type='book' pk=object.pk %}">
                             <h5>{{ object.title }}</h5>
                             <p>{{ object.description|truncatewords:10|safe }}</p>
                         </a>
@@ -71,23 +71,15 @@
                     <h2 class="fw-bolder mb-0 justify-content-center align-items-center text-danger">ویژه ها</h2>
                     <div class="swiper-container">
                         <div class="swiper-wrapper">
-                            {% for article in special_article %}
+                            {% for special in special_items %}
                             <div class="swiper-slide">
-                                <a href="{% url 'blog:content_detail' model_type='article' pk=article.pk %}">
-                                    <img src="{{ article.img.url }}" alt="{{ article.title }}" class="img-fluid">
-                                </a>
-                                <h2 class="h5">{{ article.title }}</h2>
-                                <p>{{ article.description|truncatewords:30|safe }}</p>
-                            </div>
-                            {% endfor %}
-        
-                            {% for book in special_books %}
-                            <div class="swiper-slide">
-                                <a href="{% url 'blog:content_detail' model_type='book' pk=book.pk %}">
-                                    <img src="{{ book.img.url }}" alt="{{ book.title }}" class="img-fluid">
-                                </a>
-                                <h2 class="h5">{{ book.title }}</h2>
-                                <p>{{ book.description|truncatewords:30|safe }}</p>
+                                {% with special|specify_url as dynamic_url %}
+                                    <a href="{% url dynamic_url type=special|get_model_type pk=special.pk %}">
+                                    <img src="{{ special.img.url }}" alt="{{ special.title }}" class="img-fluid">
+                                    </a>
+                                {% endwith %}
+                                <h2 class="h5">{{ special.title }}</h2>
+                                <p>{{ special.description|truncatewords:30|safe }}</p>
                             </div>
                             {% endfor %}
                         </div>
@@ -103,7 +95,24 @@
             </div>
         </div>
         
-        
+        <!-- بخش نمایش تگ‌ها -->
+        <section class="py-4">
+            <div class="container">
+                <h3 class="fw-bold text-center mb-4">تگ‌های پرطرفدار</h3>
+                <div class="row justify-content-center">
+                    <div class="col-lg-10 col-md-12 col-12">
+                        <div class="d-flex flex-wrap justify-content-center gap-2">
+                            {% for tag in top_tags %}
+                                <a href="{% url 'blog:tag_search' %}?tag={{ tag.name }}" class="btn btn-warning rounded-pill">
+                                    {{ tag.name }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
 
 
  <!-- end section slidshow --> <!-- end section slidshow --> <!-- end section slidshow --> <!-- end section slidshow -->
@@ -115,8 +124,9 @@
             <div class="row gx-5 justify-content-center">
                 <div class="col-lg-8 col-xl-6">
                     <div class="text-center">
-                        <h2 class="fw-bolder">یاداشت ها</h2>
-                    </div>
+                        <h2 class="fw-bolder">یادداشت‌ها</h2>
+                        <img class="img-fluid mx-auto d-block" style="max-width: 100%; height: auto; margin: 10px;" src="{% static 'assets/img/type_4.webp' %}" alt="Image description">
+                    </div>                    
                 </div>
             </div>
             <div class="row gx-5">
@@ -125,8 +135,8 @@
                     <div class="card h-100 shadow border-0">
                         <img class="card-img-top" src="{{ query.img.url }}" width="100%" height="350px" alt="..." />
                         <div class="card-body p-4">
-                            <a class="text-decoration-none link-dark stretched-link" href="{% url 'blog:content_detail' model_type='article' pk=query.pk %}"><h5 class="card-title mb-3">{{ query.title }}</h5></a>
-                            <p class="card-text mb-0">{{ query.description|linebreaksbr|slice:":400" }}</p>
+                            <a class="text-decoration-none link-dark stretched-link" href="{% url 'blog:content_detail' type='article' pk=query.pk %}"><h5 class="card-title mb-3">{{ query.title }}</h5></a>
+                            <p class="card-text mb-0">{{ query.description|truncatewords:30|safe }}</p>
                         </div>
                         <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
                             <div class="d-flex align-items-end justify-content-between">
@@ -145,7 +155,7 @@
                     <div class="card h-100 shadow border-0">
                         <img class="card-img-top" src="{{ note_book.img.url }}" width="100%" height="350px" alt="..." />
                         <div class="card-body p-4">
-                            <a class="text-decoration-none link-dark stretched-link" href="{% url 'blog:content_detail' model_type='book' pk=note_book.pk %}"><h5 class="card-title mb-3">{{ note_book.title }}</h5></a>
+                            <a class="text-decoration-none link-dark stretched-link" href="{% url 'blog:content_detail' type='book' pk=note_book.pk %}"><h5 class="card-title mb-3">{{ note_book.title }}</h5></a>
                             <p class="card-text mb-0">{{ note_book.description|truncatewords:30|safe }}</p>
                         </div>
                         <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
